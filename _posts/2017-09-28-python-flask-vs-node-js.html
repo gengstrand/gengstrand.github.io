@@ -1,0 +1,325 @@
+---
+layout: post
+status: publish
+permalink: /software/performance/nodejs/python
+published: true
+title: Python Flask vs Node.js
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 440
+wordpress_url: https://glennengstrand.info/blog/?p=440
+date: '2017-09-28 02:27:30 -0700'
+date_gmt: '2017-09-28 06:27:30 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- Python
+- nodejs
+comments: []
+---
+<p>
+Disillusioned with Java, many small startups are considering either Python or Node.js for their micro-services. This blog can help you decide which is right for you. I will explore what it is like to develop a rudimentary <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed5" alt="clojure-news-feed/server/feed5">news feed micro-service written in version 3 of Python on Flask</a> by comparing that experience with developing the same micro-service in Node.js</p>
+<h3>Questions and Answers</h3>
+<p>In the peer review process for the document below, people have asked these questions.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You mentioned tornado and gevent but what about gunicorn and twisted web? Aren't those server backends available too?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+They are available for Flask but not for Connexion.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+If Flask supports more server backends, then why not just code to Flask? Why bother with Connexion if it is going to limit you?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Connexion is the integration with Swagger which accelerates your time to value by automatically generating all the HTTP parts for both clients and server. In order to be a fair comparison, both services needed to have feature parity. Since the node.js service had a swagger integration, the python service had to have a swagger integration too.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You mentioned that only one MySql driver would work with Python 3 and SQL Alchemy. Which driver was that?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Precisely version 2.0.4 of the <a href="https://dev.mysql.com/downloads/connector/python/2.0.html" alt="mysqlconnector">MySql Connector for Python</a>. The latest versions had problems.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why didn't you test the Flask server running both multi-threaded and multi-process?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I tried but that configuration is not supported. It wouldn't even start.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why not just run a second instance of feed5 on the same server but listening to a different port and have kong proxy requests to both?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Because then feed4 and feed5 would have different deployments which would be an unfair comparison.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Where can I find the outbound post source code for feed 4 and feed 5 that you compared?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+<a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed4/services/OutboundService.js" alt="feed 4 outbound service">here</a> and <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed5/swagger_server/services/outbound_service.py" alt="feed 5 outbound service">here</a>
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is cluster mode?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+A single instance of Node.js runs in a single thread. To take advantage of multi-core systems the user will sometimes want to launch a cluster of Node.js processes to handle the load. The <a href="https://nodejs.org/docs/latest/api/cluster.html" alt="cluster">cluster module</a> allows easy creation of child processes that all share server ports.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is Business Driven Development?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Your unit tests are written more like a Domain Specific Language in the problem domain of the business.
+</td>
+</tr>
+</table>
+<h3>Referenced Open Source Projects</h3>
+<p>Here are the links to the projects referenced in the document below.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<thead>
+<tr>
+<th>project</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="http://cassandra.apache.org/" alt="Apache Cassandra">Cassandra</a>
+</td>
+<td>
+NoSql database
+</td>
+</tr>
+<tr>
+<td>
+<a href="http://chaijs.com/" alt="Chai">Chai</a>
+</td>
+<td>
+javascript mocking library suitable for use in unit tests with node.js apps
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/zalando/connexion" alt="Connexion">Connexion</a>
+</td>
+<td>
+Flask integration with Swagger
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.docker.com/" alt="Docker">Docker</a>
+</td>
+<td>
+run micro-services in containers
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.elastic.co/" alt="Elastic Search">Elastic Search</a>
+</td>
+<td>
+keyword based search engine
+</td>
+</tr>
+<tr>
+<td>
+<a href="http://flask.pocoo.org/" alt="Flask">Flask</a>
+</td>
+<td>
+Micro-service framework
+</td>
+</tr>
+<tr>
+<td>
+<a href="http://flask-sqlalchemy.pocoo.org/2.1/" alt="Flask SqlAlchemy">Flask Sql Alchemy</a>
+</td>
+<td>
+Flask integration with SQL Alchemy
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jarus/flask-testing" alt="Flask-Testing">Flask-Testing</a>
+</td>
+<td>
+Flask unit testing framework
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://kafka.apache.org/" alt="Kafka">Kafka</a>
+</td>
+<td>
+cluster aware message broker
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/mfncooper/mockery" alt="Mockery">Mockery</a>
+</td>
+<td>
+Mocking library for Node.js unit tests
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://nodejs.org/en/" alt="Node.js">Node.js</a>
+</td>
+<td>
+micro-service framework for javascript developers
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.npmjs.com/" alt="npm">Node Package Manager</a>
+</td>
+<td>
+Use this to install dependencies for and start Node.js services.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://pip.pypa.io/en/stable/installing/" alt="pip">pip</a>
+</td>
+<td>
+Use this to install dependencies for python services.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.jetbrains.com/pycharm/" alt="pycharm">pycharm</a>
+</td>
+<td>
+IDE for Python
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.python.org/" alt="Python 3">Python</a>
+</td>
+<td>
+programming language used to develop the feed 5 micro-service
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://redis.io/" alt="Redis">Redis</a>
+</td>
+<td>
+external memory cache
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.sqlalchemy.org/" alt="Sql Alchemy">Sql Alchemy</a>
+</td>
+<td>
+Python SQL Toolkit and Object Relational Mapper
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.sqlite.org/" alt="SqLite">SqLite</a>
+</td>
+<td>
+single user SQL database that can plug into SQL Alchemy for unit tests
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://swagger.io/" alt="Swagger">Swagger</a>
+</td>
+<td>
+MDSD for APIs
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/apigee-127/swagger-tools" alt="Swagger-Tools">Swagger-Tools</a>
+</td>
+<td>
+Node.js swagger integration
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.jetbrains.com/webstorm/" alt="WebStorm">WebStorm</a>
+</td>
+<td>
+IDE for Node.js
+</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/pythonFlaskVsNode.pdf" alt="Python Flask vs Node.js">Python Flask vs Node.js</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/pythonFlaskVsNode.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

@@ -1,0 +1,47 @@
+---
+layout: post
+status: publish
+permalink: /ajax/xmpp
+published: true
+title: Seven Reasons Why You  Should be Using XMPP Instead of AJAX
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: If you are the software architect for a proposed web 2.0 application and
+  there is a mandate for social or real-time features, then consider using XMPP as
+  a replacement for AJAX.
+wordpress_id: 218
+wordpress_url: https://glennengstrand.info/blog/?p=218
+date: '2012-05-26 23:56:43 -0700'
+date_gmt: '2012-05-27 03:56:43 -0700'
+categories:
+- Technology
+- real-time communications
+tags:
+- Extensible Messaging and Presence Protocol
+- Tigase
+- Apache Solr
+comments: []
+---
+<p>Recently, I worked on a beta project that used <a title="Closure Tools Google Developers" href="https://developers.google.com/closure/" target="_blank">Google Closure</a> on the front end and Tigase as the back end. Here are the reasons why I went with this approach. If this looks like a good fit for your project's needs, then consider adopting this architecture.</p>
+<p><strong>1. Benefit from a full featured authentication mechanism for free.</strong></p>
+<p>Why roll your own oAuth mechanism when you can have out-of-the-box access to a wide variety of secure, encrypted, standards based, hardened ways to authenticate and bind to a user session? There is no need to pass around a cookie used to look up in some data base to get the user's identity. Pass as much user specific data around with the user's session as you need. That data stays is memory until the user logs off.</p>
+<p><strong>2. There are lots of stable XMPP client libraries such as strophe and open fire.</strong></p>
+<p>No need to re-invent the wheel. These libraries abstract away the complexities of authentication, presence, messaging, queries, making each of these services as simple as a method call.</p>
+<p><strong>3. IQ protocol is as simple as AJAX yet more scalable.</strong></p>
+<p>The IQ packet is the XMPP version of AJAX. You create an XML based packet via a simple API and send it with a method you register to handle the response. Packet buffering, security, and session management is handled for you under the covers.</p>
+<p><strong>4. Leverage messaging for more complex client/server interaction.</strong></p>
+<p>For more complicated interaction, consider having your components actually chat with the user. Components can notify users in out-of-band yet real-time messages if sub-services are currently unavailable or some other workflow related issue occurs.</p>
+<p><strong>5. Presence can be used for traffic shaping techniques in order to more gracefully recover from network congestion.</strong></p>
+<p>Here's a trick for a more graceful recovery from a partially degraded or congested network. Users subscribe to the presence of components. When a component is being overwhelmed, it can broadcast a busy status for its presence. When the client portion of the application receives such a presence, it can dissuade users from using that component until it gets less busy.</p>
+<p><strong>6. Easily scale out with XEP-0114 compliant external components.</strong></p>
+<p>The server side components that you write can be configured to run either in a chat server or in its own cluster of separate servers that are dedicated for that purpose. There is no change in the code of your component needed to do that. Simply a configuration change in the chat server itself. Modern chat servers such as <a title="Load balancing external components in cluster mode" href="http://www.tigase.org/content/load-balancing-external-components-cluster-mode" target="_blank">Tigase</a> provide advanced load balancing capability for external component clusters.</p>
+<p><strong>7. Build in social features cheaply with a wide variety of mature protocol extensions such as MUC and PEP.</strong></p>
+<p>XMPP has a lot of protocol extensions optimised for making your app more social. Multi-User Chat allows users to share content with each other in a real-time chat room environment. Personal Eventing Protocol is a simplified publish and subscribe approach to sharing your status update with friends similar to what is now called an activity stream or a blog feed. Jingle allows users to communicate with each other via video streaming. There are literally hundreds of these type of socially motivated extensions.</p>
+<p>If you are the software architect for a proposed web 2.0 application and there is a mandate for social or real-time features, then consider using XMPP as a replacement for AJAX.</p>
+<p>
+<a href="https://glennengstrand.info/media/ccmBeta2Architecture.pdf" alt="Software Architecture for Real-Time Communications">Software Architecture for Real-Time Communications</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/ccmBeta2Architecture.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

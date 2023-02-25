@@ -1,0 +1,43 @@
+---
+layout: post
+status: publish
+permalink: /software/performance/springboot/dropwizard
+published: true
+title: Spring Boot vs Dropwizard
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 483
+wordpress_url: https://glennengstrand.info/blog/?p=483
+date: '2019-03-10 13:43:16 -0700'
+date_gmt: '2019-03-10 17:43:16 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- Java
+- dropwizard
+- Spring
+comments: []
+---
+<p>If you are interested in developing microservices in Java and are wondering which framework to use, then the following article may be relevant for you. I recently evaluated Pivotal Software's Spring Framework by using it to code a heterogeneous datasource microservice. A little over two years ago, I coded the same microservice in Dropwizard which is Spring Boot's closest competitor. I have a test lab where I put each microservice under load then capture and analyze the performance results. The article below is where I have documented my findings.</p>
+<p>All of this is open source. Here is where you can find the code.</p>
+<h2><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed3" alt="Dropwizard Newsfeed">feed 3</a></h2>
+<p>The Dropwizard version of the microservice.</p>
+<h2><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed8" alt="Spring Boot Newsfeed">feed 8</a></h2>
+<p>The Spring Boot version of the microservice.</p>
+<h2><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/swagger/templates/dropwizard" alt="Dropwizard Templates">Dropwizard Swagger Templates</a></h2>
+<p>The Swagger templates used to start feed 3.</p>
+<h2><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/swagger/templates/springboot" alt="Spring Boot templates">Spring Boot Swagger Templates</a></h2>
+<p>The Swagger templates used to start feed 8.</p>
+<h2><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/k8s" alt="Kubernetes manifests">k8s</a></h2>
+<p>How to spin up the test lab in Kubernetes.</p>
+<h2><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/proxy" alt="custom go proxy">proxy</a></h2>
+<p>The Kong replacement written in Golang.</p>
+<p>
+<a href="https://glennengstrand.info/media/springBootVsDropWizard.pdf" alt="Spring Boot vs Dropwizard">Spring Boot vs Dropwizard</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/springBootVsDropWizard.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/springBootVsDropWizard.pdf" alt="Spring Boot vs Dropwizard">PDF</a> for offline viewing.</p>

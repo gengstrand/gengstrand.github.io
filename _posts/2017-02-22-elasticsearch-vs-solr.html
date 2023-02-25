@@ -1,0 +1,160 @@
+---
+layout: post
+status: publish
+permalink: /software/performance/elasticsearch/solr
+published: true
+title: ElasticSearch vs Solr
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 428
+wordpress_url: https://glennengstrand.info/blog/?p=428
+date: '2017-02-22 03:07:13 -0800'
+date_gmt: '2017-02-22 07:07:13 -0800'
+categories:
+- Technology
+- search
+tags:
+- Lucene
+- Apache Solr
+- elasticsearch
+comments: []
+---
+<p>
+It's relatively easy to add advanced, scalable search capabilities to almost any application these days. All you have to do is sprinkle in a few calls to a popular open source search service in your code. That is what I did to the rudimentary news feed micro-service that I have implemented many times. In this blog, you will learn how the two most popular open source search projects, <a href="https://www.elastic.co/" alt="Open Source Search & Analytics &middot; Elasticsearch">ElasticSearch</a> and <a href="http://lucene.apache.org/solr/" alt="Apache Solr">Solr</a>, compare with each other in terms of performance under load on this micro-service.</p>
+<p>
+Here is the list of Frequently Asked Questions regarding the document at the bottom of this page.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Which versions did you compare?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Solr 5.3.1 (released Sept 2015) vs ElasticSearch 2.3.3 (released May 2016).
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Which implementation of the news feed did you use?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed2">scala</a> version.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You mentioned not being able to use the ElasticSearch java client due to a version incompatibility. Could you elaborate on that?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The latest version depends on a really old version of jackson-core while Finatra depends on a newer version that is not backwards compatible.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You mentioned an already developed load test. Where is that?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+For the first two hours, I ran the <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/load">load test application</a> with the third parameter percent-searches = 0. For the last hour, I ran this tool again with 100 percent-searches.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Where can I learn more about how you measured the results?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+See this CLI tool for <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/perf5">extracting Solr or ElasticSearch statistics</a> and this write up on how I <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/perf5/doc/intro.md">collected and analyzed the data for this research</a>.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is a soft commit?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The document has been commited to the in memory index but has not yet been fsynced back to disk.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How real world were these tests? Are the results applicable to my situation?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The news feed micro-service is somewhat rudimentary and academic. The testing started from zero documents. The setups were the default, developer friendly ones. These factors lowered the cost of testing and did not decrease the accuracy of the results but they also lower the liklihood of relevancy to your specific situation. You should most probably conduct your own tests if performance is a critical consideration.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+It looks to me like Solr out performed ElasticSearch in just about every category. Does that mean you recommend Solr over ElasticSearch?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Not neccessarily. The feature sets of the two technologies are not identical. If you need a feature that is stronger in one than the other, then that might be the deciding factor. The ElasticSearch API has a better design, from a REST perspective, than the Solr API. Finally, ElasticSearch performance may be good enough for your situation.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You implied that the difference in performance may be attributed to the difference in how the micro-service connected to the search engine. Doesn't that invalidate your results?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I don't think so. I am evaluating two software applications. That evaluation includes the client libraries. One library was unusable to me and could likely be unusable in your situation as well. If I have to fork the library in order to use it, then that is no longer a fair comparison.
+</td>
+</tr>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/elasticSearchVsSolr.pdf" alt="ElasticSearch vs Solr">Elasticsearch vs Solr</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/elasticSearchVsSolr.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

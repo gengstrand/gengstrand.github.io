@@ -1,0 +1,40 @@
+---
+layout: post
+status: publish
+permalink: /eip/mule/camel
+published: true
+title: 'Taming the Single Writer Principle: Mule vs Camel'
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 305
+wordpress_url: https://glennengstrand.info/blog/?p=305
+date: '2013-08-28 02:23:07 -0700'
+date_gmt: '2013-08-28 06:23:07 -0700'
+categories:
+- architecture
+tags: []
+comments: []
+---
+<p>In the following article, you will find my write up of a weekend project exploring two implementations of a shard aware proxy that follows the content based router <a href="http://www.eaipatterns.com/" title="Patterns and Best Practices for Enterprise Integration" target="_blank">Enterprise Integration Pattern</a> in order to enforce the <a href="http://mechanical-sympathy.blogspot.com/2011/09/single-writer-principle.html" title="Single Writer Principle" target="_blank">single writer principle</a>. One implementation uses the open source project <a href="http://www.mulesoft.org/" title="Open Source Integration Platform | Mule ESB" target="_blank">Mule</a> and the other integrates with <a href="http://camel.apache.org/" title="Apache Camel" target="_blank">Apache Camel</a>. Here are some additional background and follow up information.</p>
+<p>In the Mule example, the custom filter dynamically sets an outbound property called host. The reason why this causes the request to get forwarded to that host lies in this part of the flow XML specification. Something similar happens with the path property too.</p>
+<pre>
+<property name="host" value="#[message.outboundProperties.host]"/>
+</pre>
+<p>These content based routers served as a proxy to a <a href="https://glennengstrand.info/mdsd/closure" title="Ten things I learned while writing a Model Driven System for Google Closure" target="_blank">MDSD generated system</a> that depends on <a href="http://jersey.java.net/" title="Jersey" target="_blank">Jersey</a> to expose a RESTful API on top of a datastore pluggable ORM for a blog feed application. Here is a simple test of this proxy. With Mule I used port 8081 and with Camel I used port 9001.</p>
+<pre>
+curl -d 'subject=EIP blog&publisherid=1&storystatusid=2&intro=Taming the Single Writer Principle&article=Mule vs Camel' http://localhost:8081/update/widget?id=100
+</pre>
+<p>In the real world, you would never specify localhost in your flow specification because the service would not be able to respond to external requests.</p>
+<p>A shard aware content based router can help you enforce the single writer principle from a process perspective but that will most likely not be good enough. Modern web application containers are multi-threaded. You will also need to design your service such that only one thread is responsible for upgrading any particular item. Consider using a <a href="http://www.eecs.harvard.edu/~mdw/proj/seda/" title="SEDA: An Architecture for Highly Concurrent Server Applications " target="_blank">SEDA</a> approach. Instead of one queue with many workers in a thread pool, you would use many internal queues each with their own thread pool configured for only one worker. Use another variation of the sharding algorithm to route incoming requests to each internal queue.</p>
+<p>The sharding algorithm used here is somewhat na&iuml;ve. Sharding, that is directly used for persistence purposes, usually employs either consistent hashing or some form of virtualization in order to minimize the effort required to re-balance the nodes after changing the cluster size. That is not really needed in this case since adding another server to the proxy cluster would not require moving data around at all.</p>
+<p>If the caller neither expects nor requires any response when calling this update, then you can use an asynchronous message queuing system instead of a proxy to enforce the single writer principle. There are lots of mature, highly scalable, open source message brokers out there.</p>
+<p>I don't discuss High Availability at all in this blog but, obviously, that could not be overlooked in any real-world system. These examples perhaps naively presume that the dynamically generated hosts, that update requests get routed to, would actually be DNS mapped to load balancer managed Virtual IP addresses. Each IP pool would have to be configured in a fail-over way and not a strictly load balanced way.</p>
+<p>Why not program the load balancer to do the shard based content routing too? Content routing is really different from load balancing. I believe that it would put too much of a processing burden on your load balancers to have to provide both functions in a single system. In all likelihood, your load balancers are routing packets to almost every server in your data center and not just the servers associated with this one service.</p>
+<p>Use of load balancers to eliminate Single Point of Failure at the underlying service level may not be the right answer in your data center(s). Requests to the proxy most probably go through a load balancer to a pool of these proxy servers. Consider integrating both this proxy and the underlying service with the open source project <a href="http://zookeeper.apache.org/" title="Apache ZooKeeper" target="_blank">zookeeper</a> for an application level approach to High Availability using zookeeper's leader election recipe.</p>
+<p>
+<a href="https://glennengstrand.info/media/singleWriterMuleCamelBlog.pdf" alt="Taming the Single Writer Principle">Taming the Single Writer Principle</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/singleWriterMuleCamelBlog.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

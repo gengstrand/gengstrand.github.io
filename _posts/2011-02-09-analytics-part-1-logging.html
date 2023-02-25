@@ -1,0 +1,38 @@
+---
+layout: post
+status: publish
+permalink: /analytics/logging
+published: true
+title: Analytics Part 1 - Logging
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 168
+wordpress_url: https://glennengstrand.info/blog/?p=168
+date: '2011-02-09 04:01:07 -0800'
+date_gmt: '2011-02-09 08:01:07 -0800'
+categories:
+- Technology
+- big data
+tags:
+- Apache HTTP Server
+- Hadoop
+- Log4j
+- Google Analytics
+- AWStats
+comments: []
+---
+<p>Analytics has grown increasingly popular over the years and for good reason. There is currently no better way to arrive at a solid understanding of what your complex application is doing right and wrong than to numerically analyze its activity.</p>
+<p>This blog is a three parter. In today's blog, I will cover the basics of logging. How you can add code to your application that will log its activity for later analysis. In the next part, I will go into how to <a href="https://glennengstrand.info/analytics/selection">select the raw log data</a> in meaningful ways. In the final instalment, I shall elaborate on how to plot or graph relevant subsets of logging data for the purposes of insightful analysis.</p>
+<p>Logging is a necessary prerequisite to any kind of data analytics. If your application doesn't log its activity, then you cannot analyze it later. The simplest way to instrument your app for logging is to write out what it is currently doing to the console. Various tools are available to take the output to the console and to split it up into many files over time. Splitting up the output into multiple files will make it easier to copy to another server. It is not recommended that you manipulate and analyze the data on the same server as where your app is running. If your app can run as a service, then consider using <a href="http://smarden.org/runit/">runit</a> with its svlogd tool.</p>
+<p>If yours is a web application, then a lot of logging is most likely already happening for you. Both Apache and IIS record each HTTP operation, the end point URI, and the return code automatically. From these log files, you can learn a lot about how your app is used but there are limitations. You cannot trace the identity of the user as he or she flows through your site with this type of logging. The only type of demographic questions you can answer with this type of logging is browser type or OS. Nothing in the user's profile is available. Form post data is also not recorded at this level of logging. That return code is from the web server and not from your application. Your insert statement may have failed but the server still returned a response so the return code will indicate success. One easy way to analyze Apache log data is with the open source project <a href="http://awstats.sourceforge.net/">awstats</a>.</p>
+<p>The most popular way to log web application activity on the Internet is <a href="http://www.google.com/analytics/">Google Analytics</a>. This is a free service, provided by Google, where you drop a little java script on each page. Over time, you can access your data via the Google Analytics web site where you can track such metrics as types of visitors (browser, OS, etc), where they come from (what sites are linking to yours), most popular content (including number of visits, unique visitors, and average time spent on the page), and most popular landing and exit pages.</p>
+<p>Google Analytics also lets you set up conversion goals that you can also track. These are essentially a sequence of pages that you hope to funnel your users through. This is usually important for e-commerce sites to evaluate the effectiveness of their shopping cart.</p>
+<p>When instrumenting your app to log its activity, take a look at using a third party library instead of doing the writing directly in your app code. There really is no reason to duplicate all that logging logic in a million different places in your app. Instead, take advantage of the object oriented concept of encapsulation by wrapping your logging logic in a class or two.</p>
+<p>Java developers get this for free in the java.util.logging package. The Log class and the Level enumeration are what you will be dealing with the most. Use environmental settings and a configuration file to customize how and where all that logging gets saved including the number of files to rotate the logs through. Logging levels permit you to write copious data for short term debugging purposes or less data for long term trend watching and forecasting purposes. Advanced use may entail subclassing the LogFormatter class if you need to do fancy stuff such as aggregating data.</p>
+<p>PHP developers may wish to use <a href="https://github.com/facebook/scribe">scribe</a> to handle the mechanics of logging. Originally developed by <a href="http://www.facebook.com/note.php?note_id=32008268919">Facebook</a> and now an open source project, scribe is great for centralizing logs from large server farms. There is a <a href="http://www.cloudera.com/blog/2008/10/thrift-scribe-hive-and-cassandra-open-source-data-management-software/">thrift based API</a> which makes scribe available to other development languages and platforms.</p>
+<p>From a data store perspective, logging usually entails writing huge amounts of immutable data to be aggregated and analyzed later on. This sounds like a perfect application for <a href="http://hadoop.apache.org/">Hadoop</a>. Even if you do write your logs to files, a batch process can come behind and import those files into HDFS.  Hadoop is distributed so it is immensely scalable with no single point of failure.</p>
+<p>From the humble print statement to the system console to massively parallel noSQL data stores, we have surveyed the most effective and popular methods for logging your application's activity. This is an important first step on the road to analyzing your apps performance and usability. Stay tuned for the next installment which is all about how to select and prepare all these raw logging files for analysis.</p>

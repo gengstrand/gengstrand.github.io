@@ -1,0 +1,52 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/layers/build/buy
+published: true
+title: 'Software Architecture Basics: Build vs Buy'
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: Today’s successful applications are layered. With each layer, you get to
+  evaluate and decide whether or not to build, buy, or adopt open source. Each choice
+  has its own advantages and disadvantages.
+wordpress_id: 128
+wordpress_url: https://glennengstrand.info/blog/?p=128
+date: '2010-07-31 18:59:51 -0700'
+date_gmt: '2010-07-31 22:59:51 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- Cloud computing
+- Alfresco
+- Openfire
+- Jeff Potts
+- Extensible Messaging and Presence Protocol
+- Apache HTTP Server
+- ASP.NET
+- Apache James
+- Hadoop
+- Java
+- Active MQ technology
+comments: []
+---
+<p>The days of developing viable applications that do simple things are over. No one is interested in a checkbook app that just calculates a running balance. An entrepreneur might have a somewhat simple business idea whose marketability that he or she wants tested with a simple web app but that, in itself, is not a simple application. There is usually both a front end presentation with a back-office workflow. Even a simple business idea will still require a home page, landing pages, category pages, detail pages, social media, e-commerce, order fulfillment, and maintenance screens.</p>
+<p>Today's successful applications are layered. That's a good thing. It is a way of managing the complexity of software development. With each layer, you get to evaluate and decide whether or not to build, buy, or adopt open source. Each choice has its own advantages and disadvantages.</p>
+<p>Let's start with our lowest layer and work our way up. No one in the application development space seriously considers writing their own Operating System these days. Linux, FreeBSD, Solaris, and Windows (in no particular order) are the most common choices for a server OS. The choice here is pretty simple. Go with a Windows OS if you are working on an ASP.NET application. Otherwise, &nbsp;go with your favorite distro of Linux.</p>
+<p>At the next layer is where data is stored. While the OS handles file level storage, most applications work with another layer for data storage. These days, that layer is for data that is organized either relationally (i.e. SQL) or as n-tuples (i.e. Big Table). This is another layer where it is usually a no-brainer to decide to either buy or go with an open source offering.</p>
+<p>For a relational database, the biggest choice is the open source MySql project. Those who are concerned about the future of MySql considering Oracle's acquisition of Sun, may want to look at another open source project called PostGreSql. If your organization feels more comfortable relying on a closed source vendor, then Oracle, MS SQL Server, and DB2 are the most common choices there.</p>
+<p>For non-relational data access, if you are running in a cloud, then you will most likely go with the Big Table implementation offered by the cloud vendor. The two biggest cloud vendors are Amazon and Google so your choices there would be <a href="http://aws.amazon.com/simpledb/">SimpleDB</a> or the GAE datastore. If you are looking for a BigTable implementation and you don't want to run in the cloud, then take a look at the open source Apache Hadoop project with its HBase sub project. Corporate customers should take a look at <a title="Cloudera: Apache Hadoop for the Enterprise" href="http://www.cloudera.com/" target="_blank">Cloudera</a> which is a convenient packaging of Hadoop technology for the enterprise. Another popular open source project is the <a title="The Apache Cassandra Project" href="http://cassandra.apache.org/" target="_blank">Cassandra</a> project which was originally open sourced by Facebook and now maintained by the Apache Foundation.</p>
+<p>The next layer to consider is the web server. There are just too many good web servers out there to seriously consider writing your own. The two most popular web servers come from the Apache Foundation and Microsoft. The choice here is really simple. Go with Microsoft if you are developing an ASP.NET application. Otherwise, go with Apache. High performance sites also consider <a title="squid: Optimizing Web Delivery" href="http://www.squid-cache.org/" target="_blank">Squid</a> and <a title="memcached: a distributed memory object caching system" href="http://memcached.org/" target="_blank">Memcached</a> where caching is desirable.</p>
+<p>Sophisticated projects will sometimes require an application container. Although I have run across organizations that rolled their own, most use a third party vendor's offering. <a href="http://framework.zend.com/">Zend</a>, <a href="http://cakephp.org/">CakePHP</a>, and <a href="http://codeigniter.com/">CodeIgniter</a> seem to be the most popular choices for those who prefer PHP. ASP.NET shops almost always use Microsoft's .NET runtime. J2EE shops have more viable choices. What I am seeing these days is that almost everyone now uses The Apache Tomcat project for their Java web application container. JBoss is a strong contender for Java. If you use Mono for ASP.NET, then I would like to hear from you.</p>
+<p>Caching is a technique that is used for web sites that must perform under heavy load. Another technique is to schedule some tasks to be performed later on. That is where messaging middle-ware technology fits in. Some companies roll their own but this is another situation where you should seriously consider using an already mature offering.</p>
+<p>Mega-corps with deep pockets tend to use IBM's MQ Series or Microsoft's Message Queue. If you are more into open source, then give Apache's <a title="Apache Active MQ" href="http://activemq.apache.org/" target="_blank">Active MQ</a> technology a try. Another viable open source messaging technology that is gaining traction quickly is <a href="http://www.rabbitmq.com/">RabbitMQ</a>. If your needs require integration of various, disparate technologies, then take a look at the open source Enterprise Service Bus called <a title="Mule ESB" href="http://www.mulesoft.org/" target="_blank">Mule</a>. If your needs are simpler, you code in PHP, and guaranteed delivery is not a requirement, then <a href="http://www.openfusion.net/web/theschwartz">The Schwartz Job Queue</a> project might be for you.</p>
+<p>So far, we've talked about the OS, persistent storage, web servers, app containers, and middle-ware. Up to now, it is usually clear cut to use someone else's code. Here is where things get interesting. A lot of software projects take it from there and build everything else in house. There are other options that you should consider, however.</p>
+<p>If your app is primarily about publishing content, then consider customizing a Content Management System instead of writing an app from scratch. There are many CMS offerings to choose from that feature a layered architecture that is easy to customize. For PHP shops, there is Drupal which is a widely popular and successful open source CMS project with a viable and active community of contributers.</p>
+<p>There are two open source CMS projects written in Java, Nuxeo and Alfresco. Here is the KATO mockup for <a title="Create from Scratch versus Extend from Existing" href="http://it.toolbox.com/blogs/future-of-work/create-from-scratch-versus-extend-from-existing-36022" target="_self">extending the J2EE CMS</a> <a title="Alfresco" href="http://www.alfresco.com/" target="_self">Alfresco</a>. This article from Jeff Potts, author of the <a title="Alfresco Developers Guide" href="http://www.goodreads.com/book/show/6510765-alfresco-developer-guide" target="_self">Alfresco Developers Guide</a>, goes into detail on <a title="Working with Custom Content Types" href="http://ecmarchitect.com/images/articles/alfresco-content/content-article.pdf" target="_self">working with custom content types</a>.</p>
+<p>It's rare to find a web site that doesn't require extensive integration with email as email still serves as a very effective medium for re-engagement. If all you need to do is send email, then your app container will most likely provide all you need but, if your app needs to read a large volume of email, then consider a deeper integration effort with an open source email server. For extending an email interface, consider the <a title="James Project - Overview" href="http://james.apache.org/index.html" target="_self">Apache James</a> open source project. <a title="mailets" href="http://james.apache.org/mailet/index.html" target="_self">Mailets</a> is the name for the plugin framework used to extend email process handling. Be advised that many companies would rather poll an in-box from an already existing email service because customizing a mail server has higher operational costs since you have to maintain an MX record with your DNS.</p>
+<p>When it comes to touch points for re-engagement, some folks prefer the more real-time nature of Instant Messaging. For extending an IM interface, consider the open source XMPP server platform&nbsp;<a title="Ignite Realtime Openfire Server" href="http://www.igniterealtime.org/projects/openfire/" target="_self">Openfire</a>. Here is the page on&nbsp;<a title="Openfire Plugin Developer Guide" href="http://www.igniterealtime.org/builds/openfire/docs/latest/documentation/plugin-dev-guide.html" target="_blank">writing plugins</a> for Openfire. XMPP can also be used as a messaging middle-ware technology. Openfire is great in an enterprise environment but apps that must serve large numbers of users should also take a look at <a title="Open Source Jabber/XMPP Server" href="http://www.tigase.org/" target="_blank">Tigase</a>.</p>
+<p>Today's modern web applications have a layered architecture. It is important to analyze each layer in order to decide whether or not to build, buy, or embrace an open source offering. The higher up the application stack that your code lives at, the faster you can get to market. The trick is to extend already written mature and stable components without sacrificing too much of the required functionality.</p>

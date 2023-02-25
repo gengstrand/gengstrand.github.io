@@ -1,0 +1,51 @@
+---
+layout: post
+status: publish
+permalink: /solr/customize
+published: true
+title: 3 Ways to Customize Solr 4
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: Lucene/Solr is a full featured search engine and it is rare to need to extend
+  its search capabilities. If you do find yourself needing something not available
+  in vanilla Solr, then functions, request handlers, and search components are three
+  basic ways to extend Solr with your own custom Java code to handle special search
+  requirements.
+wordpress_id: 233
+wordpress_url: https://glennengstrand.info/blog/?p=233
+date: '2012-11-23 16:11:19 -0800'
+date_gmt: '2012-11-23 20:11:19 -0800'
+categories:
+- Technology
+- search
+tags:
+- Java
+- Lucene
+- Apache Solr
+- Java Servlet
+comments: []
+---
+<p>The <a href="http://lucene.apache.org/solr/">Apache Solr project</a> is an open source technology that wraps the Lucene search engine up as a stand-alone web service. Lucene/Solr provides a lot of awesome functionality out of the box but, for those customers with special search needs, here are the three most common and effective ways to customize version 4 of Solr. </p>
+<p>Both Lucene and Solr are written in Java. All of these customizations involve coding classes in Java, including the resulting JAR file in the appropriate folder on the server, and configuring your custom classes in the Solr configuration XML file. The classes for these types of customizations run in the JVM of Solr itself.</p>
+<p>Other types of customizations, not covered here, can be written in any language and run outside of Solr itself. These customizations are usually connectors that populate and synchronize your Solr index with other datastores. There is a data import handler that comes with Solr but is not recommended for large data sets.</p>
+<p>Solr exposes its functionality as web service calls conforming to the Java Servlet API and, as such, requires a servlet container to run in. Which folder to copy your JAR file to depends on which servlet container you use. Both resin and tomcat have configurable common library folder locations. You will need to repackage the Solr WAR file with your custom classes if you are using Jetty.</p>
+<p><strong>Custom Functions</strong></p>
+<p>In all likelihood, Solr can already handle just about any possible query that you would need to run. If you have an elaborate, complex, or dynamic scoring algorithm or if you need real-time filtering by some data outside the index, then you may need to add your own custom function to Solr.</p>
+<p>There are three classes that you will need to subclass in order to implement your own custom function; the ValueSourceParser, the ValueSource, and the FunctionValues classes.</p>
+<p>The ValueSourceParser is a factory that parses user queries to generate ValueSource instances. You will need to override the parse method and you most probably should implement the init method too. You will need to collect and hold on to the value sources from the schema fields from the index schema from the function Q parser at parse time for use later on in the FunctionValue subclass.</p>
+<p>Your subclass of ValueSource is responsible for instantiating function values for a particular query. You will need to implement getValues, equals, hashcode, and description. That first method returns the payload that you care the most about and contains mostly glue code. The next two methods are important because they work with Solr's query results cache, the last method isn't very important and is used mostly for debug logging purposes.</p>
+<p>FunctionValues represents field values as different types. FunctionValues is distinct from ValueSource because there needs to be an object created at query evaluation time that is not referenced by the query itself. This is because query objects should be thread safe and query objects are often used as keys for caching so you don't want the query carrying around big objects. The important functions to override are floatVal and doubleVal. One is for scoring and the other is for frange filtering. You will also be getting quite familiar with AtomicReader and ValueSource. Never access fields from the document directly. Always go through the ValueSource objects that you obtained in your ValueSourceParser. Getting field values from the document always goes to disk. Going through the ValueSource leverages Solr's three caches for better performance.</p>
+<p>You will be adding a valueSourceParser tag to the solrconfig.xml file in order  to tell Solr about your new custom function. You can also include the configuration information that gets passed to your custom function at init time. Custom functions can be referenced in a query in two places; in the sort attribute and included in a frange call in a filter query attribute.</p>
+<p><strong>Request Handlers</strong></p>
+<p>The select and update end points are the most often used request handlers in Solr but there are many others (e.g. replication and administration) and you can add your own.</p>
+<p>In order to do that, you must subclass RequestHandlerBase and override the handleRequestBody, getSource, and getDescription methods. If you have ever written a servlet, then you should know what to do in your implementation of the handleRequestBody method. It is not the same APIs but it is conceptually similar. The other two methods are for debugging and diagnostics.</p>
+<p>You let Solr know about your new request handler by adding a requestHandler section in the Solr configuration file. The name is the relative path in the URI for your end point and the class attribute is the full canonical class name for Solr to load. The defaults list gets parsed and passed into the init method.</p>
+<p><strong>Search Components</strong></p>
+<p>Search requests in Solr are not monolithic processes. They are composed of a chain of components that you can customize in the solr configuration file. </p>
+<p>You must subclass the SearchComponent class. You must override the prepare, process, getSource, and getDescription methods. The prepare methods for all components in the chain get called before any process method gets called so prepare is the place to do initialization that is request dependent. The code that you put in the process method is what you do to process the request. The other two methods are for debugging and diagnostics.</p>
+<p>The most common way to extend search functionality is to either prepend or append your own custom component to this chain. For example, if you wanted to include a summary report in each request, then you would write your SearchComponent class, configure it in a searchComponent section, then include a reference to that in the last-components area of the requestHandler configuration. Be advised that your custom search component will be able to access only those rows to be returned and not the entire results of the search.</p>
+<p>Lucene/Solr is a full featured search engine and it is rare to need to extend its search capabilities. If you do find yourself needing something not available in vanilla Solr, then functions, request handlers, and search components are three basic ways to extend Solr with your own custom Java code to handle special search requirements.</p>

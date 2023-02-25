@@ -1,0 +1,231 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/scala/rewrite
+published: true
+title: Revisiting Scala
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 451
+wordpress_url: https://glennengstrand.info/blog/?p=451
+date: '2018-03-20 23:11:23 -0700'
+date_gmt: '2018-03-21 03:11:23 -0700'
+categories:
+- Technology
+- architecture
+- cloud computing
+tags:
+- scala
+comments: []
+---
+<p>
+Have you ever been involved in a microservice rewrite effort? Come with me as I take you through a Scala microservice coding adventure that was a complete rewrite of an existing Scala microservice. We shifted paradigms in the hope of making Scala more desirable. Was the new service a real improvement over the old one? Let&rsquo;s find out.</p>
+<h3>Questions and Answers</h3>
+<p>In the peer review process for the document below, people have asked these questions.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you pick Doobie over Slick? Isn't Slick more popular than Doobie?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Slick is reactive only. There are no synchronous APIs. Since this microservice is synchronous, it makes more sense to use Doobie which provides both synchronous and asynchronous APIs. In order to use Slick, I would have had to write code that awaits for Slick's futures which are wrapping synchronous JDBC calls.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Are you saying that Scalatra is faster than Finatra?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+No. I am saying that Scalatra is more efficient than Finatra for RESTful (i.e. synchronous) APIs and that Finatra is more efficient than Scalatra for reactive (i.e. asynchronous) APIs.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you add the Swagger integration?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I originally created feed2 right before Swagger really took off so I didn't include it back then. All of the microservices developed since feed2 do include Swagger. I include it because it is a really successful MDSD that does a good job of accelerating your time to value.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is Garbage Collection pressure?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+If a Java application creates a lot of objects that fall out of scope, then the application must reclaim the memory used by those objects. Otherwise the application would just run out of memory. That reclaimation is a process called Garbage Collection. Sometimes all application threads have to be stopped while the garbage collector moves objects around in order to defragment the memory that is still being used. This puts pressure on the application since it looks like it is running but it is not actually doing anything relevant to the desired functionality of the application itself.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+In the past, you always used EC2 so why did you run the tests on GKE?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Because it is super easy to set up. Scroll near the bottom  of this wiki topic where it says <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/k8s/README.md" alt="GKE">Google Kubernetes Engine</a> to see what I did to run this. Compare that to what I have to do in order to run the same tests on <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/aws/README.md" alt="semi manually setting up the load test on AWS">AWS</a>.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is the "dreaded diamond" problem?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The term comes from C++ where multiple inheritance is supported. Consider the following class inheritance hierarchy. Class A has two subclasses, B and C. Class D inherits from both B and C. If a method is called on D that is defined on A and overriden in both B and C, then which implementation gets run? It could be either B or C. That non-determinism is the  problem.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why go to the bother of type classes for Dependency Injection? Couldn't you have simply injected the dependencies as parameters in the constructors of the classes that depend on them?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+That would have worked for this news feed microservice due to its simplicity. Real world, business oriented microservices have circular dependencies. Constructor based DI won't work with circular dependencies but type classes will. It is possible to refactor your classes in order to remove the circular dependencies but then your classes won't be domain driven anymore. Such a refactor would decrease the readability of the code.
+</td>
+</tr>
+</table>
+<h3>References</h3>
+<p>Here are the additional sources referenced in the document below.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<thead>
+<tr>
+<th>reference</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed2" alt="feed2">sample news feed written in scala</a>
+</td>
+<td>
+From this folder, you can build the feed2 project which is what the document below is referencing as the legacy system.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed6" alt="feed6">Another News Feed Microservice in Scala</a>
+</td>
+<td>
+From this folder, you can build the feed6 project which is what the document below is referencing as the rewrite.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://twitter.github.io/finatra/" alt="Finatra">Finatra</a>
+</td>
+<td>
+Finatra is a Scala services framework built on top of TwitterServer and Finagle.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://netty.io/" alt="Netty">Netty</a>
+</td>
+<td>
+Netty is an asynchronous event-driven network application framework for rapid development of maintainable high performance protocol servers & clients.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://medium.com/rahasak/scala-cake-pattern-e0cd894dae4e" alt="Scala cake pattern">Cake Pattern</a>
+</td>
+<td>
+The Cake pattern can be (loosly) considered as Scalas answer to Dependency Injection. The basic application of DI and the Cake pattern solve the same thing: dependencies between components.
+</td>
+</tr>
+<tr>
+<td>
+<a href="http://scalatra.org/" alt="Scalatra">Scalatra</a>
+</td>
+<td>
+Scalatra is a simple, accessible and free web micro-framework. It combines the power of the JVM with the beauty and brevity of Scala, helping you quickly build high-performance web sites and APIs.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.eclipse.org/jetty/" alt="Jetty">Jetty</a>
+</td>
+<td>
+Eclipse Jetty provides a Web server and javax.servlet container, plus support for HTTP/2, WebSocket, OSGi, JMX, JNDI, JAAS and many other integrations. These components are open source and available for commercial use and distribution.
+</td>
+</tr>
+<tr>
+<td>
+<a href="http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf" alt="Type Classes as Objects and Implicits">Type Classes</a>
+</td>
+<td>
+Type classes were originally developed in Haskell as a disciplined  alternative  to  ad-hoc  polymorphism.  Type  classes have been shown to provide a type-safe solution to important  challenges  in  software  engineering  and  programming languages  such  as,  for  example, retroactive  extension of programs. They are also recognized as a good mechanism for concept-based generic programming and, more recently, have evolved into a mechanism for type-level computation.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://swagger.io/" alt="The World's Most Popular API Tooling">Swagger</a>
+</td>
+<td>
+Swagger is the world&rsquo;s largest framework of API developer tools for the OpenAPI Specification(OAS), enabling development across the entire API lifecycle, from design and documentation, to test and deployment.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://tpolecat.github.io/doobie/" alt="A principled JDBC layer for Scala.">Doobie</a>
+</td>
+<td>
+Doobie is a pure functional JDBC layer for Scala and Cats. It is not an ORM, nor is it a relational algebra; it simply provides a principled way to construct programs (and higher-level libraries) that use JDBC.
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/index.html" alt="Java REST Client">ElasticSearch client</a>
+</td>
+<td>
+The official high-level client for Elasticsearch. Based on the low-level client, it exposes API specific methods and takes care of requests marshalling and responses un-marshalling.
+</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/scalaRevisited.pdf" alt="feed2 vs feed6">Revisiting Scala</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/scalaRevisited.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

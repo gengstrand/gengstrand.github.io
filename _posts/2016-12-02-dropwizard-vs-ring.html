@@ -1,0 +1,177 @@
+---
+layout: post
+status: publish
+permalink: /software/performance/clojure/dropwizard
+published: true
+title: DropWizard vs Ring
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 411
+wordpress_url: https://glennengstrand.info/blog/?p=411
+date: '2016-12-02 02:14:11 -0800'
+date_gmt: '2016-12-02 06:14:11 -0800'
+categories:
+- Technology
+- architecture
+- cloud computing
+tags:
+- architecture
+- Java
+- clojure
+comments: []
+---
+<p>
+I have been blogging here a lot about the new kids on the JVM block, namely Clojure and Scala. I wanted to see how they compared against the more established Java frameworks. When version 1 of DropWizard was released, I decided that was the time to write another news feed micro-service implementation. This blog is about the <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed3" alt="newsfeed-dropwizard">news feed micro-service implementation using DropWizard</a>.</p>
+<p>
+<img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dropwizardClasses.png" alt="conceptual level class diagram of dropwizard service" /></p>
+<p>
+I wrote the feed, ran some load tests, then compared the results to the same load tests for the Clojure version. I documented my findings in the PDF at the bottom of this page. Here are some answers to questions about the document below.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How did you come to the conclusion that <a href="https://github.com/google/guice" alt="google / guice">Guice</a> is more popular than Spring when it comes to Dependency Injection in <a href="http://www.dropwizard.io/1.0.5/docs/" alt="Dropwizard production-ready out of the box">DropWizard</a>?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+It's been four months since version 1 of DropWizard has been released. The <a href="https://github.com/HubSpot/dropwizard-guice" alt="HubSpot / dropwizard-guice">dropwizard-guice</a> integration was available immediately. There still isn't an integration with Spring yet.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you bother using <a href="http://swagger.io/" alt="The World's Most Popular API Framework">Swagger</a>?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I have been an advocate for <a href="https://glennengstrand.info/mdsd/closure" alt="Ten things I learned while writing a Model Driven Software Development system for Google Closure">MDSD</a> for a long time now. Swagger is fairly popular and I wanted to see just how well the popularity was deserved by using it to <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/swagger" alt="news feed swagger">generate all the RESTful parts</a> of the service.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Well? What do you think of Swagger?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I like the technology. Curiously enough, the web site doesn't mention MDSD even once. The focus seems to be about onboarding start ups to get to market faster using their pre-existing templates. That's cool but the real value comes when you adopt and adjust the templates as an expression of your own architecture. One size does not fit all.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is your "standard load test?"
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Basically, it is a <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/load" alt="load">program</a> that I wrote that simulates news feed load by creating participants, creating friend relationships between the participants, then posting news to participant outbound feeds.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is the difference between low load and high load?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Running the load test program with one thread vs three threads.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You referenced JDBI in the architecture section and then you mentioned Java annotation in the differences section and then you listed Guice and Jersey. Didn't you also mean to list JDBI in the annotation paragraph too?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+No. I used the JDBI fluent api instead of the Java annotation approach.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How do you run all these load tests?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I used <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/aws" alt="manually setting up the load test on AWS">aws</a> for all my load test experiments.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You used to use Solr for the search component. With this implementation of the news feed micro-service, you switched to Elastic Search. Does that mean you now prefer Elastic Search over Solr?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I had to switch over to Elastic Search for the DropWizard service due to a version conflict in the downstream dependencies with Jetty. I switched from Solr to Elastic Search for the other news feed apps in order to have a more valid basis for comparison during all the load testing.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why do you still stand up your own EC2 instances of Elastic Search and Redis when you can just use the AWS PaaS versions of those services?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I tried using Amazon Elasticsearch Service and Amazon ElastiCache but I couldn't get it to work. I think that I had to set up IAM based access for those and I just didn't want to. I didn't try very hard because it is pretty easy and quick to stand up those services yourself.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Any interest in switching to Memcached?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I already coded those classes and will most probably write a blog in the future comparing news feed performance when using Redis vs Memcached.
+</td>
+</tr>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/dropwizard.pdf" alt="DropWizard vs Ring: The Java Framework Strikes Back">DropWizard vs Ring: The Java Framework Strikes Back</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/dropwizard.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

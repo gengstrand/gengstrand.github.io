@@ -1,0 +1,38 @@
+---
+layout: post
+status: publish
+permalink: /comparison/tigase/openfire
+published: true
+title: 'Adopting Real Time Communication: Openfire vs Tigase'
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: 'You are interested in adding real time communication but which open source
+  project should you use? '
+wordpress_id: 143
+wordpress_url: https://glennengstrand.info/blog/?p=143
+date: '2010-09-04 16:04:03 -0700'
+date_gmt: '2010-09-04 20:04:03 -0700'
+categories:
+- Technology
+- real-time communications
+tags:
+- Openfire
+- Extensible Messaging and Presence Protocol
+- Instant messaging
+- Tigase
+comments: []
+---
+<p>There is a growing trend right now to add real time communication to your enterprise collaboration solution. Companies are taking a page from the play books of Facebook and Yahoo (who copied Twitter) and are adding Instant Messaging to their service offerings. When it comes to IM, consider XMPP which is the protocol designed from day one for IM.</p>
+<p>When setting up your own chat server, there are two open source projects that you should seriously consider; Openfire and Tigase.</p>
+<p>Sponsored by such corporate leaders in IM as Jive, IBM, Apple, and Google, <a title="Ignite Realtime: Openfire Server" href="http://www.igniterealtime.org/projects/openfire/" target="_blank">Openfire</a> is an XMPP server written in Java and stewarded by Ignite Realtime.</p>
+<p><a title="Open Source and Free (GPLv3) Jabber/XMPP Server" href="http://www.tigase.org/" target="_blank">Tigase</a> has more humble and open source traditional origins where an engineer, seasoned in server development, had an "itch to scratch" and started building this XMPP server.</p>
+<p>How are Tigase and Openfire similar? They both fully support the <a title="The XMPP Standards Foundation" href="http://xmpp.org/" target="_blank">XMPP</a> standard and many of the more popular extensions to that standard. They both parallel the high extensibility of the protocol with their own pluggable architecture. They are both written in Java.</p>
+<p>You can extend the chat server functionality by writing your own plugins and components. The heart of the XMPP is in its three main stanzas; IQ, presence, and message. IQ is mostly about roster management. Presence is how those away and available notifications get delivered. Messages are what you text back and forth with your friends. If you want to add new functionality to those stanzas, or create your own, then you should write a plugin.If you want to write a chat bot (i.e. a robot that you can exchange messages with), then you should write a component.</p>
+<p>A JID (Jabber IDentifier) is how you log in to the server and how you address other users. They look a lot like email addresses. A component has its own JID whereas a plugin does not.</p>
+<p>How are Tigase and Openfire different? Openfire provides a web based administrative interface which you can extend with your own JSP. You can add your own plugins by packaging them up in a WAR file and adding them through the admin interface. Openfire depends on being hosted by a J2EE application container such as Tomcat. Tigase is a stand-alone program that is executed by itself. The only administrative interface for Tigase is a text based properties file that you can edit before launching the Tigase service. To get Tigase to load your plugins and components, you just have to ensure that your JAR files are in the classpath prior to starting Tigase.</p>
+<p>With Tigase, you can also plug in your own repository instead of depending on their relational database. Tigase is more oriented towards high scalability with its support for clustering, virtual hosts, and thread management.</p>
+<p>Which one is best for your needs? If you are more concerned about IT footprint and cost containment than you are about serving large numbers of people, then you should start with Openfire. If you already know that you are going to have to serve large numbers of users and are willing to commit the resources of a server farm, then you won't go wrong with Tigase.</p>

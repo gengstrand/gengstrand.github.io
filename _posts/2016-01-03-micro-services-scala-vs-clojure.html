@@ -1,0 +1,175 @@
+---
+layout: post
+status: publish
+permalink: /software/performance/scala/clojure
+published: true
+title: 'Micro-Services: Scala vs Clojure'
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 377
+wordpress_url: https://glennengstrand.info/blog/?p=377
+date: '2016-01-03 13:57:27 -0800'
+date_gmt: '2016-01-03 17:57:27 -0800'
+categories:
+- Technology
+- architecture
+- cloud computing
+tags:
+- architecture
+- scala
+- clojure
+comments: []
+---
+<p>
+In my last blog, I compared Clojure to Scala when it came to coding micro-services. In this blog, I compare those same micro-services in terms of performance under load in AWS.</p>
+<p>
+Here are some answers to questions about the document below. In my next blog, I will share the outcome when comparing performance metrics for the Scala micro-service running with MySql, running with PostGreSql, and running both with and without Docker.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+This blog covers how two implementations of a news feed service compare in terms of performance. Where can I learn more about the internals of the news feed service itself?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+See <a href="https://glennengstrand.info/software/architecture/oss/clojure" alt="a news feed web service using Clojure, Redis, Cassandra, Postgresql, Kafka, and Solr">Building a Scalable News Feed Web Service in Clojure</a> for a blog on the Clojure version. See <a href="https://glennengstrand.info/software/architecture/oss/scala" alt="comparing Scala and Clojure in the world of micro-services">Micro-Services: Clojure vs Scala</a> for some coverage on the Scala version. See <a href="https://github.com/gengstrand/clojure-news-feed" alt="github repository for both the Clojure and Scala implementations of the news feed micro-service">clojure-news-feed</a> for the source code to both. See my <a href="https://hub.docker.com/u/gengstrand/" alt="Glenn Engstrand Docker Hub">Docker Hub</a> page for some pre-built docker images for both.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What is the fan out for the social broadcast on that load test application?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+From 2 to 4.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You chose the open source technology <a href="http://spray.io/" alt="REST/HTTP for your Akka Scala Actors">Spray</a> as the web container then moved to <a href="https://twitter.github.io/finatra/" alt="Fast, testable, Scala services built on TwitterServer and Finagle.">Finatra</a> when Spray did not scale. Why didn't you choose the <a href="https://www.playframework.com/" alt="high velocity web framework for Java and Scala">Play framework</a> which is more popular than Spray?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I looked at Play. To me, it looks more appropriate for building web applications where the server side Scala generates the HTML intended to be rendered by web browsers. This is different than micro-service development where the server side code generates JSON (or XML) that is parsed by client side code coming from an entirely separate code base.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+From the document below, it looks like Clojure is the winner. Does this mean that you would always recommend Clojure over Scala?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+That all depends. Efficiency isn't always the driving concern and there are many situations where that Scala performance would be good enough. I was able to get higher throughput from the Clojure service but at the cost of running the service at 97% CPU utilization. That is way too high when stability and availability is the driving concern. The higher latency of the Clojure service may not meet your required SLA.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+What software did you use in your analysis?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I used <a href="https://zeppelin.incubator.apache.org/" alt="A web-based notebook that enables interactive data analytics.">Apache Zeppelin</a> for the throughput and latency and <a href="https://visualvm.java.net/" alt="Project Kenai">Visual VM</a> for the JVM profiling.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You mentioned learning about Ring in an O'Reilly book on Clojure. Which book is that?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+<a href="http://shop.oreilly.com/product/0636920013754.do" alt="Clojure Programming">Clojure Programming</a> Practical Lisp for the Java World
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+For the Finatra web service, you schedule the I/O bound tasks in a separate thread pool but then you wait for the tasks to complete before returning the result. Doesn't that defeat the purpose of the thread pool?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The Finatra documentation says that controllers can return either the response or a Future of the response. When the code returns the Future, the response is just a promise ID and not the expected serialized JSON. Here is an example. Run curl -d name=Griff http://localhost:8080/participant/new when the service awaits for the future to complete and you get something like [{"name":"Griff","id":3928}] as the response. Run that same curl call when the service returns the future and you get something like Promise@1847747152(state=Interruptible(List(),<function1>)) instead.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+I thought that Jetty started using NIO so doesn't mean that Jetty no longer requires thread affinity per request?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Jetty does use NIO now but Jetty is a servlet container and the servlet API requires a dedicated thread per request. Don't get me wrong. I now believe that thread affinity is a good thing.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Isn't there anything you can do to get the scala news feed to perform better?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Sure. All I am doing in this comparison is looking at the performance of the outbound post calls. If I remove the Await.result(f) line from the handler for the outbound post (because the load test application doesn't depend on the response of that operation) and use only one test machine (because there appears to be retrograde scalability in the Scala feed), then you get comparable throughput with the Clojure service at about a third of the latency. Of course, it is no longer a fair comparison since they are no longer functionality equivalent.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+You cover the MySql performance but not the Cassandra or Redis performance. Why?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+In all tests, the Cassandra and Redis performance was awesome and in no way indicative of overall performance problems. For Cassandra, read latency was under 0.2 ms and write latency was an order of magnitude less. Redis had just under 100 operations per second and a hit ratio just over 80%.
+</td>
+</tr>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/scalavsclojureblog.pdf" alt="Scala vs Clojure: Performance Under Load">Scala vs Clojure: Performance Under Load</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/scalavsclojureblog.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

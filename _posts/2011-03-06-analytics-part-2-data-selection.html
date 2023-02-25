@@ -1,0 +1,44 @@
+---
+layout: post
+status: publish
+permalink: /analytics/selection
+published: true
+title: Analytics Part 2 - Data Selection
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: Learn how to massage your application's event logging into data that is compatible
+  with analytics.
+wordpress_id: 175
+wordpress_url: https://glennengstrand.info/blog/?p=175
+date: '2011-03-06 16:03:11 -0800'
+date_gmt: '2011-03-06 20:03:11 -0800'
+categories:
+- Technology
+- big data
+tags:
+- linux
+- Hadoop
+- AWK
+- open source tools
+comments: []
+---
+<p>It has been said by numerous industry pundits and trend watchers that we are currently in the age of information analysis. From the A/B testing of your humble iPhone app to planning the next six figure media campaign for your large scale social content site, analytics is the method of choice for learning how to better optimize and tune the effectiveness and relevancy of your app.</p>
+<p>This blog is part 2 of 3 parts. In today's blog, I will go into how to massage the raw logging data captured from <a href="https://glennengstrand.info/analytics/logging">part 1</a> in preparation for <a href="https://glennengstrand.info/analytics/graphing">graphing</a> or reporting on interesting trends which you will learn about in part 3. </p>
+<p>You have now instrumented your app for logging and have gotten all these raw log files with the collected activity of your app. These files capture all aspects of your app's activity which is information overload when trying to spot trends or to answer specific questions about relevance or usability. What you need to do in the selection phase is convert those log files from a logging appropriate format to a graphing appropriate format.</p>
+<p>How do you filter and aggregate these raw log files into data that is more easily able to be graphed or displayed as a table based report?</p>
+<p>If you are using Linux or Mac OS X, then you most probably have all the command line tools that you will need to get the job done.  Windows users should check out <a href="http://www.cygwin.com/">cygwin</a> which provides similar command line tools for Microsoft compatible machines. Here is a gentle introduction to some of these tools and what they can do for you.</p>
+<p>If you are looking only at one type of activity and wish to filter out the rest, then consider using <a href="http://www.gnu.org/software/grep/">grep</a> which is a general regular expression parser that can report on or extract out strings from your log files that matches patterns that you specify. It can also do some rudimentary aggregation and perform these operations on just one file or on multiple files in a folder hierarchy. Another way to aggregate is to pipe the grep output into the wc -l command.</p>
+<p>If each line in your log file looks like a multi-column table where each column is delimited by a special  character (e.g. CSV or Comma Separated Values files), then you can use the Linux command line tools <a href="http://www.techrepublic.com/article/master-the-lesser-known-cut-and-diff-linux-commands/5034547">cut</a>, <a href="http://webtools.live2support.com/linux/join.php">join</a>, and <a href="http://www.computerhope.com/unix/upaste.htm">paste</a> to subset and union these rows both vertically and horizontally. The cut command extracts specific columns out of a file. The paste command combines two files together on a line-by-line basis. The join command combines two files vertically over a specific column.</p>
+<p>Sometimes you might need to massage a log file in order to get it into CSV format. In which case, <a href="http://www.linuxjournal.com/article/7231">sed</a> might just be the right tool for the job. This line oriented text editor is ideally suited for shell scripts that need to do this kind of data massaging.</p>
+<p>For more complex aggregation, pivoting, filtering, and report generation, consider using awk which is a very advanced report writing tool. To use <a href="http://www.awktutorial.com/">awk</a>, you write this script that looks like a hybrid of the C programming language and a sed script. This script is fed your log file which it parses to generate the output.</p>
+<p>Each of these tools perform a very specific task. You can easily combine these tools to get the entire job done through use of such shell programming features as pipes, sideways pipes, and redirection. Constructs such as conditionals, for loops, and here files should also come in handy.</p>
+<p>A pipe takes the output from one tool and makes it the input to another. A sideways pipe takes the output from one tool and makes it the command line arguments to another. If that output is multi-line, then you will want to pipe it into xargs. Redirection permits a tool to get its input from a previously existing file or to save its output as a new file. </p>
+<p>If your filtering needs to be context sensitive, where a match of one pattern should occur only in the context of another (possibly on a previous row in the log file), then consider using <a href="http://www.antlr.org/">ANTLR</a> to perform these more advanced filtering operations. It is easy to install ANTLR. Just download the JARs and run them. You will most probably also want to use <a href="http://www.antlr.org/works/index.html">antlrworks</a> to create your grammar specification files.</p>
+<p>ANTLR is actually a general purpose parser generator but you can re-purpose it via the use of its filter and rewrite grammar options and its integration with another Java library called string template.</p>
+<p>Maybe you already use relational databases and would just like to take advantage of the expressive power of the Structured Query Language's select statement to generate reports from your log files instead of all these different command line tools? If that is your preference, then consider dumping your log files into <a href="http://hadoop.apache.org/">Hadoop</a> and use Hive to run SQL statements against your logging data. While not standards compliant, Hive SQL is very expressive and will work on extremely large data sets (though not quickly). </p>
+<p>The easiest way to install Hadoop and <a href="http://hive.apache.org/">Hive</a> is <a href="http://www.cloudera.com/">Cloudera</a> which is available to Linux users as a Debian package. You will have to add their repository to your <a href="http://www.nongnu.org/synaptic/">Synaptic Package Manager</a> repository configuration before installing. </p>
+<p>It's amazing just how easy it is to slice and dice your raw log files in order to get the data just right for graphing and reporting. Today, you got a glimpse into some of the more common tools used for these purposes. In the next instalment, you will see how to use more <a href="https://glennengstrand.info/analytics/graphing">open source tools in order to graph</a> and/or display this data in professional looking reports.</p>

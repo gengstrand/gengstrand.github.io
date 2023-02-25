@@ -1,0 +1,55 @@
+---
+layout: post
+status: publish
+permalink: /mdsd/closure
+published: true
+title: Ten things I learned while writing a Model Driven Software Development system
+  for Google Closure
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: If you are considering the development of a MDSD system, then avoid making
+  some costly mistakes by learning these ten lessons that I learned when I wrote a
+  MDSD system that generates web 2.0 apps based on Google Closure and XMPP. If you
+  can keep it simple, keep it useful, provide an editor, provide importers, generate
+  clean code, automate the entire build process, and decouple both GUI and data store,
+  then you'll have a really cool tool.
+wordpress_id: 227
+wordpress_url: https://glennengstrand.info/blog/?p=227
+date: '2012-08-11 16:40:42 -0700'
+date_gmt: '2012-08-11 20:40:42 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- Python
+- real-time communications
+- JavaScript
+- Google Inc.
+comments: []
+---
+<p>Model Driven Software Development, or MDSD, attempts to reduce the amount of repetitive coding inherent in most business application software development today by generating that code automatically instead of requiring a human coder to write it manually. Google Closure is a compiler, library, and templating system for writing Rich Internet Applications in Javascript. Extensible Messaging and Presence Protocol, or XMPP, is an alternative to AJAX that affords real-time communications. Here are ten lessons that I learned while adapting a previously written MDSD generator to emit Google Closure Javascript code on the client side talking XMPP with external components on the server side.</p>
+<p><strong>1. Don't make another code generation wizard.</strong></p>
+<p>Most MDSD systems hit the mainstream packaged as some kind of application development wizard. The developer answers a set of questions pertaining to the desired application and the code for a starter application that generally fits the GUI requirements is generated. The motivation behind this kind of approach is that the developer feels productive right away without really learning much about the framework in which the generated application is dependent upon. This generation is a one time only deal. The developer cannot tweak and re-generate. As the developers add more of their code, the use of the wizard declines until it is never used. In the end, progress in writing the application will stall out until the developer does learn the entire framework. The wizard approach may be a useful onboarding tool or helpful in making the sale but, in the long run, contributes to overall productivity only very minimally.</p>
+<p><strong>2. Avoid an overly complicated meta-model.</strong></p>
+<p>In MDSD, a generator parses a model, based on a predetermined schema or meta-model, and pours that model into a set of templates in order to generate the output code in the target system. If you  try to develop a general purpose MDSD system, then you will be tempted to make a very complicated meta-model. Don't succumb to that temptation. The resulting excessive amount of cognitive overhead required to author any model written in the language of an overly complex meta-model will tempt the developers to abandon MDSD and just write the code themselves. The easiest solution is to make the generator domain specific, perhaps as a part of the core assets from a software product line. There are advanced techniques for developing a general purpose MDSD with a relatively simple meta-model but that topic is beyond the scope of this blog.</p>
+<p><strong>3. Provide a custom model editor.</strong></p>
+<p>In all likelihood, the model will be written in one of the following formats; XML, YAML, or JSON. If you leave it to the developer to use a general purpose editor for one of these formats, then there will be  massive abandonment as it will be too easy for the developer to go astray and end up with a non-compliant model that will result in a buggy and unstable system. Be sure to factor in the time needed to code a validating model editor application by which developers can build their models more easily and with fewer errors. Feel free to provide wizards in the model editor that can accelerate productivity in specifying the model.</p>
+<p><strong>4. Be able to import models from a wide variety of sources.</strong></p>
+<p>Developers may already have a favorite preference of modeling tool so be prepared to be able to import the documents written from other tools. The model editor I wrote is capable of importing UML models from Eclipse and RDFS models from Protege as well as reverse engineer a model from a pre-existing relational data base schema.</p>
+<p><strong>5. Don't edit the output by hand.</strong></p>
+<p>As time progresses and your MDSD gains adoption, it is going to be extremely tempting to just add that one line change to the output in order to satisfy some new requirement. Don't do it. Instead, take the time to figure out how your MDSD system can model that new requirement properly. As soon as you start editing the output, you will stop using the MDSD system to create new releases. At that point, you are back to the diminishing returns of an app wizard. The vast majority of the work needed in any successful application goes into the subsequent releases so this is where a well designed MDSD system can really shine.</p>
+<p><strong>6. When writing the generator and template code, be sure to pick a programming language that is unlikely to be used as the target language.</strong></p>
+<p>It can be very hard to debug a template when the programming language of the template itself is also the programming language of what is getting generated. It becomes very easy to confuse the code that is run during the generation process with the code that will run in the resulting application. A common mistake is to use a variable in the resulting application that was declared during the generation process. If the two programming languages are different, then you are more likely to avoid that error. The generator for this Google Closure MDSD app is written in Python precisely because Closure is all about HTML, Javascript, and soy. There is not a line of Python in it. That and the fact that Python is a first class object oriented programming language with lots of features that support easy template generation.</p>
+<p><strong>7. The output should be just as maintainable as if you were writing it by hand.</strong></p>
+<p>The build process may start with the model and end up with the code but the debugging process starts with the code and ends up with changes to the templates and/or model. If the code is hard to comprehend, then it will be very hard to debug. Developers despise monolithic spaghetti code no matter how it was written.</p>
+<p><strong>8. It's not just code that should be generated. It's markup, resources, styling, and configuration too.</strong></p>
+<p>A modern application needs all of these things so the model should be capable of specifying them and there should be templates available to generate them. There are lots of times when a change to the output markup must also be accompanied by a corresponding change to the Javascript and the CSS. If that first change is conditional to or affected by a model specification, then so could the other changes. I have found that a MDSD approach to the various properties files makes for a good, light weight configuration management tool that is quite suitable for developer, QA, and SMB production  environments.</p>
+<p><strong>9. Give your templates some skin.</strong></p>
+<p>Skinning an app is a design approach where the actual GUI is somewhat decoupled from business rules, data access, and binding. CSS may be a necessary, but not sufficient, means to achieving this decoupling for web apps. For Google closure style apps, that might mean maintaining different soy files. I chose not to use soy to generate markup for other reasons so what I did was to create an abstract class called Skin that declared various methods for rendering the basic GUI components and subclasses that provided the actual implementations for those methods. Examples include rendering an input text field versus a select field with menu items for capturing hour in the day or an anchor tag versus a link button for navigation.</p>
+<p><strong>10. Decouple the back end data store from the front end GUI.</strong></p>
+<p>Not everyone who is interested in generating Google Closure apps will want to use XMPP. Decouple code that is responsible for the GUI with code that  is responsible for communicating with the back  end data store. I made this decoupling pluggable and configurable such that developers can choose to mix and match Closure with XMPP or AJAX.</p>
+<p>If you are considering the development of a MDSD system, then avoid making some costly mistakes by learning these ten lessons that I learned when I wrote a MDSD system that generates web 2.0 apps based on Google Closure and XMPP. If you can keep it simple, keep it useful, provide an editor, provide importers, generate clean code, automate the entire build process, and decouple both GUI and data store, then you'll have a really cool tool.</p>

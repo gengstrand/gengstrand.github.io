@@ -1,0 +1,179 @@
+---
+layout: post
+status: publish
+permalink: /software/coding/scala/java
+published: true
+title: Scala vs Java
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 588
+wordpress_url: https://glennengstrand.info/blog/?p=588
+date: '2022-06-19 17:13:38 -0700'
+date_gmt: '2022-06-19 21:13:38 -0700'
+categories:
+- Technology
+tags:
+- Java
+- scala
+comments: []
+---
+<p><!-- wp:paragraph --></p>
+<p>
+Both Scala and Java are programming languages that target the JVM. Scala was originally invented with the intention to become a better Java yet eighteen years later many more developers write code in Java than Scala. What happened? In this blog, I cover the lessons learned by one technology company that chose to standardize backend microservice development on Scala instead of Java. Here you will learn about the various programming language features and patterns exclusive to Scala that give it an edge over Java. You will also learn about the difficulties that Java developers face when learning Scala. We will go over the differences between Scala and Java: the good, the bad, and the ugly.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>
+The article itself will display at the bottom of this topic. Here are the references with links to online resources used in the making of this evaluation.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:table --></p>
+<figure class="wp-block-table">
+<table>
+<thead>
+<tr>
+<th>type of source</th>
+<th>reference link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>article below</td>
+<td><a href="https://glennengstrand.info/media/scalaVsJava.pdf">Scala vs Java</a></td>
+</tr>
+<tr>
+<td>online dashboard</td>
+<td><a href="https://spectrum.ieee.org/top-programming-languages/">IEEE Spectrum Programming Language Ratings</a></td>
+</tr>
+<tr>
+<td>online dashboard</td>
+<td><a href="https://trends.google.com/trends/explore?date=all&amp;q=%2Fm%2F07sbkfb,%2Fm%2F091hdj">Google Trends</a></td>
+</tr>
+<tr>
+<td>official introduction</td>
+<td><a href="https://docs.scala-lang.org/overviews/scala-book/case-classes.html">Case Classes</a></td>
+</tr>
+<tr>
+<td>official introduction</td>
+<td><a href="https://docs.scala-lang.org/overviews/scala-book/match-expressions.html">Match Expressions</a></td>
+</tr>
+<tr>
+<td>official introduction</td>
+<td><a href="https://docs.scala-lang.org/tour/type-inference.html">Type Inference</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://typelevel.org/blog/2016/08/21/hkts-moving-forward.html">Higher-kinded types: the difference between giving up, and moving forward</a></td>
+</tr>
+<tr>
+<td>overview</td>
+<td><a href="https://typelevel.org/cats/">Cats</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://dzone.com/articles/fully-for-comprehansion-able-free-monad-in-scala">For-Comprehension Free Monads in Scala</a></td>
+</tr>
+<tr>
+<td>home page</td>
+<td><a href="https://zio.dev/">Zio</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://scalac.io/blog/typeclasses-in-scala/">Type Classes</a></td>
+</tr>
+<tr>
+<td>documentation</td>
+<td><a href="https://doc.akka.io/docs/akka/current/stream/index.html">Akka Streams</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://www.artima.com/weblogs/viewpost.jsp?thread=179766">Extension Methods</a></td>
+</tr>
+<tr>
+<td>home page</td>
+<td><a href="https://circe.github.io/circe/">Circe</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="http://spray.io/blog/2012-12-13-the-magnet-pattern/">The Magnet Pattern</a></td>
+</tr>
+<tr>
+<td>source code</td>
+<td><a href="https://github.com/mongodb/mongo-java-driver/blob/master/bson-scala/src/main/scala/org/mongodb/scala/bson/BsonMagnets.scala">Mongo DB Java Driver</a></td>
+</tr>
+<tr>
+<td>book chapter</td>
+<td><a href="https://livebook.manning.com/book/dsls-in-action/chapter-6/">DSL</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://jazzy.id.au/2015/03/04/sbt-declarative-dsl.html">Scala Build Tool</a></td>
+</tr>
+<tr>
+<td>book chapter</td>
+<td><a href="https://books.underscore.io/shapeless-guide/shapeless-guide.html">Shapeless</a></td>
+</tr>
+<tr>
+<td>home page</td>
+<td><a href="https://spark.apache.org/">What is Apache Spark?</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://scalac.io/blog/tagless-final-pattern-for-scala-code/">Tagless Final</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://medium.com/rahasak/scala-cake-pattern-e0cd894dae4e">Cake Pattern</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://well-typed.com/blog/2008/04/the-dreaded-diamond-dependency-problem/">diamond dependency in multi-inheritance</a></td>
+</tr>
+<tr>
+<td>tutorial</td>
+<td><a href="https://www.geeksforgeeks.org/ruby-mixins/">Ruby Mixins</a></td>
+</tr>
+<tr>
+<td>online dashboard</td>
+<td><a href="https://insights.stackoverflow.com/trends?tags=java%2Cscala">Stack Overflow Trends</a></td>
+</tr>
+<tr>
+<td>official introduction</td>
+<td><a href="https://docs.scala-lang.org/tour/implicit-conversions.html">Scala Implicit Conversions</a></td>
+</tr>
+<tr>
+<td>blog</td>
+<td><a href="https://www.baeldung.com/scala/lifting">Lifting</a></td>
+</tr>
+<tr>
+<td>reference</td>
+<td><a href="https://programmer.group/special-symbols-commonly-used-in-scala.html">Special Symbols</a></td>
+</tr>
+<tr>
+<td>source code</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed6">Scala on Scalatra</a></td>
+</tr>
+<tr>
+<td>source code</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed8">Java on Spring</a></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p><!-- /wp:table --></p>
+<p><!-- wp:paragraph --></p>
+<p>
+<a href="https://glennengstrand.info/media/scalaVsJava.pdf">Scala vs Java</a></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/scalaVsJava.pdf&amp;embedded=true" style="width:850px; height:730px;" frameborder="0"></iframe></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/scalaVsJava.pdf">PDF</a> for offline viewing.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Here are some resources that I ran across after publishing this blog. Last year, Forbes published an article entitled <a href="https://www.forbes.com/sites/forbestechcouncil/2021/12/22/why-scala-is-seeing-a-renewed-interest-for-developing-enterprise-software/">Why Scala Is Seeing A Renewed Interest For Developing Enterprise Software</a> which covers more historical context. Quite recently, Stack Overflow published their <a href="https://survey.stackoverflow.co/2022/">2022 Developer Survey</a> where the <a href="https://survey.stackoverflow.co/2022/#section-most-loved-dreaded-and-wanted-programming-scripting-and-markup-languages">loved vs dreaded</a> section for programming languages revealed that 50.3% of developers surveyed loved Scala while the remaining 49.7% dreaded it. By comparison 45.75% of developers surveyed loved Java while the remaining 54.25% dreaded it.</p>
+<p><!-- /wp:paragraph --></p>

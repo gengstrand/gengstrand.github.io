@@ -1,0 +1,33 @@
+---
+layout: post
+status: publish
+permalink: /analytics/oss
+published: true
+title: Discovering Big Data with Open Source
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 297
+wordpress_url: https://glennengstrand.info/blog/?p=297
+date: '2013-04-27 18:51:29 -0700'
+date_gmt: '2013-04-27 22:51:29 -0700'
+categories:
+- Technology
+- big data
+tags: []
+comments: []
+---
+<p>With all the media attention on big data and what part <a href="http://hadoop.apache.org/" title="Welcome to Apache Hadoop" target="_blank">Hadoop</a> plays in it, I thought that I would return to basics and blog about real-world Hadoop from a developer's perspective. This is not about flume, falcon, impala, ambari, oozie, or sqoop. This is a story about a developer, a weekend, some data, and a gentle introduction to Hadoop.</p>
+<p>For all the talk about scale, one of the things that I love about Hadoop is single node mode. Production Hadoop is all about running big data jobs on a cluster of commodity hardware. There are a lot of steps to set it up and a lot of knobs to turn in order to get your cluster humming smoothly. Single node mode let's developers write code on their own machine that runs in the Hadoop environment without having to go through all the pain of a complicated installation. Download, uncompress, extract, change directory, JAVA_HOME, and you're done. In single node mode, there is no distributed file system. Single node mode Hadoop works  directly with the local file system so no need to dfs -cp any files. The sample data set documented here is small enough to work fine with single node mode Hadoop.</p>
+<p>In the 8 page article (see below), I reference the <a href="https://github.com/gengstrand/map-reduce-sf-crime" title=" gengstrand / map-reduce-sf-crime" target="_blank">github repository</a> where the code, referenced in the article, can be found. I talk about using <a href="http://hive.apache.org/" title="Welcome to Hive" target="_blank">Hive</a> on the sample data but there are no hive scripts in the github repository. Why is that? I wanted to talk about Hive because that is how a lot of companies use Hadoop. Hive is rather limited. In fact, hive cannot even parse the sample data. The full CSV specification allows for you to include the field delimiter in a column by wrapping that column's value in quotation marks. Take a look at the top of page 4 from the article. Hive's parsing of CSV data isn't that sophisticated. You either have to massage the input data as part of the import process or customize hive with a special CSV SerDe.</p>
+<p>At the time of this blogging, the industry is suffering from a bad case of Hadoop-itice. Hadoop isn't always the right tool for the job. The sample data from the article is three months worth of crimes committed in San Francisco. That is a world class city with a lot of crime but even ten years of crime is not big enough to warrant the use of Hadoop. </p>
+<p>The Java code examples in the article itself are not great examples of defensive programming. All the code, that guards against bad outcomes, has been removed. This keeps the example concise and illustrates the relevant concept which is how to write jobs that live within the Hadoop environment. The source code in the github repository contains all the guard code and housekeeping logic for a more complete and real-world example.</p>
+<p>The AWK,  R, and MDX examples can be found in the src/main/etc folder from the github repository. There is also the sfcrime.xml file which Mondrian needs to map the cube to the MySql database. The mondrian.jsp file shows you how to customize your Mondrian web app to use the sfcrime cube. The starschema.sql creates the four tables that you will need. You need to be able to create database and set up a MySql user account to access that database. You will need to edit the mondrian.jsp with this information and copy that file into the right place in the Mondrian web app. Many of these files will require slight tweaking in order to work because  they reflect the directory structure of my laptop and not your machine. This is an educational project and not a finished product.</p>
+<p>I mention the weeks and months problem but I don't really suggest any way to solve that problem. Most companies solve the problem by not including both months and weeks in the time dimension. If you decide to go with weeks instead of months, then use the Calendar.WEEK_OF_YEAR instead of Calendar.WEEK_OF_MONTH. You still have a similar, but less significant, problem between years and weeks.</p>
+<p>This blog is about open source so I used <a href="http://mondrian.pentaho.com/" title="Pentaho Mondrian Project" target="_blank">Pentaho's Mondrian</a> but most companies use either Microsoft Analysis Services or Oracle Hyperion Essbase. Why is that? Those two solutions are both expensive. They both are easier to set up and have more enterprise features. Most importantly, they both have first class integration with Microsoft Excel. With Mondrian, you navigate through and explore the data with a web app then export to the locally installed spreadsheet application for charting purposes. With the proprietary offerings, you do it all in Excel which is a smoother experience. Back in the 90's, you expected the OLAP technology to do all the number crunching. The proprietary blends are more scalable than Mondrian for raw number crunching. That is no longer all that important in the current times because you let Hadoop do the number crunching and expect only a GUI from your OLAP technology. That is the approach many companies, including my <a href="http://zooskdev.wordpress.com/2012/10/19/marriage-of-hadoop-and-olap-best-of-both-worlds-to-make-sense-of-200-terabytes-of-data/" title="Marriage of Hadoop and OLAP: Best of both worlds to make sense of 200 Terabytes of data" target="_blank">current employer</a>, takes.</p>
+<p>
+<a href="https://glennengstrand.info/media/ossBigDataBlogGlennEngstrand.pdf" alt="Big Data with Open Source">Big Data with Open Source</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/ossBigDataBlogGlennEngstrand.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

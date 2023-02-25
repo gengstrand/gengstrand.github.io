@@ -1,0 +1,214 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/oss/clojure
+published: true
+title: Building a Scalable News Feed Web Service in Clojure
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 309
+wordpress_url: https://glennengstrand.info/blog/?p=309
+date: '2014-02-21 02:46:29 -0800'
+date_gmt: '2014-02-21 06:46:29 -0800'
+categories:
+- Technology
+- architecture
+- cloud computing
+tags: []
+comments: []
+---
+<p>
+The company where I currently work pays for each engineer to go to the conference of their choice once a year. One of my co-workers decided to go to Java One. When he came back, he shared with us the theme for that year which was Functional Programming. I decided that it was time to revisit FP if it was starting to pick up traction with the stodgy Java One types.</p>
+<p>
+So, I whipped up a <a href="https://github.com/gengstrand/clojure-news-feed">news feed web service</a> using <a href="http://clojure.org/">Clojure</a>, <a href="http://redis.io/">Redis</a>, <a href="http://cassandra.apache.org/">Cassandra</a>, <a href="http://www.postgresql.org/">Postgresql</a>, <a href="http://kafka.apache.org/">Kafka</a>, and <a href="https://lucene.apache.org/solr/">Solr</a>. Then I set it up on AWS and put some load testing on it to see how well these new open source technologies compare to their older brethren. I aggregated the performance metrics using <a href="http://hadoop.apache.org/">Hadoop</a> and surfaced the data using the <a href="http://community.pentaho.com/projects/mondrian/">Mondrian</a> OLAP cube. The blog documents my findings.</p>
+<table cellpadding="3" cellspacing="5" border="0">
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How do you set up the blog feed service and get it running?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+See the <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed/doc/intro.md" alt="Introduction to feed">feed/doc/intro.md</a> file for a more detail explaination.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How do you set up and start the load test?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+See <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/load/doc/intro.md" alt="Introduction to load">load/doc/intro.md</a> file for a more detailed explaination.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How do you capture the performance data from the load test?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+That is also covered in the <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/load/doc/intro.md" alt="Introduction to load">load/doc/intro.md</a> file.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How do you set up the OLAP cube?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+See <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/etl/doc/intro.md" alt="Introduction to etl">etl/doc/intro.md</a> file for a more detailed explaination.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why use postgresql for the news feed service itself yet capture the performance data in a MySql database?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The default Mondrian installation uses MySql so there is less set up if you go that route.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+How do you run the map reduce job?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Review the <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/etl/README.md" alt="Extract, Transform, and Load">etl/README.md</a> for more information.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you attribute the spike to the cloud? Could it have been something else such as redis?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+It is unlikely that Redis is the cause because, were that to have been the case, then the same spike would not have shown up in all the graphs.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+I understand why you would want to stay with the JVM. It is mature, stable, and hardened by countless man hours of engineering. Why didn't you code this service in Java?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+There is a big trend these days to use Functional Programming. In FP, you are discouraged from mutating state which is the cause of a large number of bugs in multi-threaded services.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you pick Clojure? Why not pick another JVM based Functional Programming language such as Scala or Groovy?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I felt that such features as Software Transactional Memory, lazy sequences, and Persistent Data Storage made Clojure more focused on addressing real world server side concerns such as less buggy concurrency and excessive object creation.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why use Redis for caching? Why not ehcache?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+The default topology for ehcache is embedded. I did not want to put the cache on the heap because that can pause the app during a full GC. You can code around those problems but it increases the complexity of your service.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Okay then, if you needed an external cache, why not use memcached?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+Redis has support for the ability to add to the end of a list without first fetching the list. This solves a lot of timing window problems where individual items of a list can get lost during concurrent writes. You can code around those problems with at the cost of additional complexity and some degradation of performance.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you store the activity content itself in a NoSql data store? Why not put everything in the RDBMS?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+I am a "right tool for the job" kind of engineer and not a "one size fits all" engineer. Modern relational databases are complicated systems but, basically, it is a B Tree data structure. That is a good fit for profile data or a social graph but not the best when we are talking about time series such as a news feed. For that type of access pattern, a log structured merge tree makes more sense.
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: red">Q:
+</td>
+<td valign="top">
+Why did you pick Cassandra then? Why not hbase?
+</td>
+</tr>
+<tr>
+<td valign="top" style="color: green">A:
+</td>
+<td valign="top">
+In a social broadcast use case, you are typically going to have more writes than reads. <a href="http://planetcassandra.org/blog/post/dating-site-zoosk-breaks-up-with-mysql-migrates-to-apache-cassandra-for-persistent-notifications/" alt="Dating Site Zoosk Breaks Up with MySQL; Migrates to Apache Cassandra for Persistent Notifications">Cassandra</a> is more optimized for that than hbase.
+</td>
+</tr>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/clojureNewsFeed.pdf" alt="Building a Scalable News Feed Web Service in Clojure">Building a Scalable News Feed Web Service in Clojure</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/clojureNewsFeed.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

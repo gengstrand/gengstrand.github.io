@@ -1,0 +1,37 @@
+---
+layout: post
+status: publish
+permalink: /java/server/antlr
+published: true
+title: Server Side ANTLR
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: ANTLR is used to embed a domain specific language parser into a Java servlet
+  then stress tested to determine its scalability.
+wordpress_id: 161
+wordpress_url: https://glennengstrand.info/blog/?p=161
+date: '2010-11-16 03:28:57 -0800'
+date_gmt: '2010-11-16 07:28:57 -0800'
+categories:
+- Technology
+tags:
+- ANTLR
+comments: []
+---
+<p>ANTLR is ANother Tool for Language Recognition. I have used ANTLR many times before to embed the ability to parse a configuration or set of instructions written in a domain specific language into a command line tool. This past weekend, I coded up a <a href="http://code.google.com/p/blogwidget/">Java servlet that uses ANTLR technology</a> to parse web requests written in a specific query language conducive to web publishing.</p>
+<p>Compiler theory and language parsing is a pretty deep subject in computer science. You start with Chomsky's Theory of Formal Languages and end up with parsing strategies such as LALR(1) and LL(k). It's not for everyone. ANTLR makes it easy to develop and maintain your own parser for a language whose specification keeps changing but only if you have a solid grasp of the fundamental concepts. Otherwise, it is going to look a lot like voodoo.</p>
+<p>I have used ANTLR before but this is the first time that I have used version 3. There has been a lot of improvements since the last version. One of the biggest improvements has been the change of parsing strategy from LL(k) to LL(*). Perhaps a small digression to explain that is in order.</p>
+<p>A very important part to parsing is the ability to recognize strings that conform to the language specification from those that do not. You  write the language specification in a kind of EBNF format (file type is .g in ANTLR) and run an ANTLR tool that creates classes in a variety of languages (e.g. Java, C#, Python) whose job it is to parse these strings.</p>
+<p>What the parser does is break the string up into tokens (this is called the lexical analysis phase) then process those tokens. At the same time, it is traversing the language specification which is a set of production rules. If it finds a rule for the next token, then the string is still compliant to the language specification. Otherwise, it is not.</p>
+<p>What happens if it finds two or more rules that match the next token? This is called ambiguity which is a bad thing. The parser needs to decide what the next rule is or it can't proceed. The way to make that decision is to look ahead to see if any tokens further down stream can resolve the ambiguity. Grammar specifications with limited look ahead are harder to read.</p>
+<p>That is why the move to LL(*) from LL(k) is a big deal. With LL(k) you have to specify the maximum look ahead and the bigger the number, the slower the parsing. With LL(*) you can have unlimited look ahead and the parsing remains fast thanks to two other features new in version 3 called memoization and backtracking.</p>
+<p>Some other cool features in version 3 is the ability to use ANTLR to easily create filters and rewriters. With these new features, it is easy to use ANTLR to create log file analysis tools, for example. Grammar rules can now have return values which allows you to easily propagate relevant information up the call stack of the rule traversal in a parsing session.</p>
+<p>What do you do with a string once it has been parsed? Earlier versions of ANTLR allowed you to either embed your own commands into the parser class that get executed when the corresponding rule has been chosen and to create an AST or Abstract Symbol Tree that can be traversed after the parsing has concluded.</p>
+<p>Another new feature in version 3 is a third option which is to use string template technology to generate output; however, that has not proven to be so useful in my own exploration of version 3.</p>
+<p>Another thing that I did this past weekend was stress test the servlet using Tsung. I wanted to see how well ANTLR could perform when expected to serve about two requests per second for an hour.</p>
+<p>What I found was that ANTLR was easily able to handle the load taking around one millisecond to perform the parsing. A surprise discovery for me what that the AST version performed just as well as the embedded commands version. I had expected that the AST version would take longer since you had to traverse the AST data structure afterwards. There was no noticeable difference in latency between the two types of parsings.</p>
+<p><object id="_ds_61821470" name="_ds_61821470" width="630" height="550" type="application/x-shockwave-flash" data="http://viewer.docstoc.com/"><param name="FlashVars" value="doc_id=61821470&mem_id=201324&doc_type=pdf&fullscreen=0&allowdownload=1" /><param name="movie" value="http://viewer.docstoc.com/"/><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="true" /></object><br /><script type="text/javascript">var docstoc_docid="61821470";var docstoc_title="Scalable Server Side Language Parsing";var docstoc_urltitle="Scalable Server Side Language Parsing";</script><script type="text/javascript" src="http://i.docstoccdn.com/js/check-flash.js"></script><font size="1"><a href="http://www.docstoc.com/docs/61821470/Scalable-Server-Side-Language-Parsing">Scalable Server Side Language Parsing</a></font></p>

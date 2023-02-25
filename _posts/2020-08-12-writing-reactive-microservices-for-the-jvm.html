@@ -1,0 +1,241 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/microservice/vertx/play
+published: true
+title: Writing Reactive Microservices for the JVM
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 551
+wordpress_url: https://glennengstrand.info/blog/?p=551
+date: '2020-08-12 01:08:59 -0700'
+date_gmt: '2020-08-12 05:08:59 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- scala
+- MSA
+- reactive
+- play
+- vertx
+- JVM
+comments: []
+---
+<p>
+I've known about Vert.x and Play for quite some time but just never got around to covering them here. I recently decided that it was past time to correct for that error in judgement. For those wishing to build reactive microservices for the JVM, these two frameworks definitely merit your consideration. While you don't absolutely require a reactive framework in order to develop reactive microservices, it sure does help to adopt one. If you feel comfortable developing microservices that don't depend on the Spring framework, then read on.</p>
+<p>
+These blogs have been getting more ambitious in scope lately. For the longest time, I would develop the next feature identical rudimentary news feed microservice and blog about how it compares to a previously coded and covered implementation. That type of story usually takes about 6 pages to tell. The last 2 blogs had a wider scope, comparing golang to all previous implementations and comparing both REST vs GraphQL with javascript vs typescript. They both were 10 pages in length each. This blog compares reactive to non-reactive and 2 new frameworks with both each other and with a servlet based predecessor. That is why this latest blog is 14 pages in length.</p>
+<h2>References</h2>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th>link</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://glennengstrand.info/media/vertxVsPlay.pdf" alt="Vert.x vs Play">Writing Reactive Microservices for the JVM</a></td>
+<td>article below</td>
+</tr>
+<tr>
+<td><a href="https://vertx.io/" alt="Eclipse Vert.x">Vert.x</a></td>
+<td>reactive web framework used by feed 11</td>
+</tr>
+<tr>
+<td><a href="https://www.playframework.com/" alt="The high velocity web framework for java and scala">Play</a></td>
+<td>reactive web framework used by feed 12</td>
+</tr>
+<tr>
+<td><a href="https://trends.google.com/trends/explore?date=today%205-y&geo=US&q=%2Fm%2F0c3ykpz,%2Fm%2F0ndx2mr" alt="Play framework vs Vert.x">Google Trends</a></td>
+<td>Google trends comparison of Play with Vert.x</td>
+</tr>
+<tr>
+<td><a href="https://netty.io/" alt="Netty is an asynchronous event-driven network application framework for rapid development of maintainable high performance protocol servers & clients.">Netty</a></td>
+<td>server backend used by both feed 11 and feed 12</td>
+</tr>
+<tr>
+<td><a href="https://www.reactivemanifesto.org/" alt="The Reactive Manifesto">reactive programming</a></td>
+<td>concepts behind reactive programming</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed6/README.md" alt="news feed microservice in Scalatra">feed 6</a></td>
+<td>news feed implementation in Scalatra</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed11/README.md" alt="news feed microservice in Vert.x">feed 11</a></td>
+<td>news feed implementation in Vert.x</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed12/README.md" alt="news feed microservice in Play">feed 12</a></td>
+<td>news feed implementation in Play</td>
+</tr>
+<tr>
+<td><a href="http://scala-slick.org/" alt="Functional Relational Mapping for Scala">Slick</a></td>
+<td>library used by feed 11 and 12 for accessing MySql</td>
+</tr>
+<tr>
+<td><a href="https://scalatra.org/" alt="Scalatra is a simple, accessible and free web micro-framework.">Scalatra</a></td>
+<td>servlet web framework used by feed 6</td>
+</tr>
+<tr>
+<td><a href="https://circe.github.io/circe/" alt="A JSON library for Scala powered by Cats">Circe</a></td>
+<td>Library used by feed 11 and 12 for working with JSON</td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice/blob/master/README.md" alt="Guice alleviates the need for factories and the use of new in your Java code.">Guice</a></td>
+<td>Library used by feed 12 for dependency injection</td>
+</tr>
+<tr>
+<td><a href="https://gatling.io/" alt="The best developer tool to load test your<br />
+web applications">Gatling</a></td>
+<td>Library used by feed 12 for local profile based load testing</td>
+</tr>
+<tr>
+<td><a href="https://doc.akka.io/docs/akka-http/current/index.html" alt="The Akka HTTP modules implement a full server- and client-side HTTP stack on top of akka-actor and akka-stream">Akka HTTP</a></td>
+<td>Play can be configured to use this instead of Netty</td>
+</tr>
+<tr>
+<td><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/package-summary.html" alt="Java Non-blocking Input Output">Java NIO</a></td>
+<td>Netty uses this part of the JRE for non-blocking IO</td>
+</tr>
+</tbody>
+</table>
+<h2>By the Numbers</h2>
+<p>
+Here is a summary of the article below in numbers.</p>
+<h3>Static Code Analysis</h3>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th></th>
+<th colspan="3">per file Lines of Code</th>
+<th>cyclomatic</th>
+<th>external</th>
+</tr>
+<tr>
+<th>feed</th>
+<th>mean</th>
+<th>median</th>
+<th>std dev</th>
+<th>complexity</th>
+<th>dependencies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right">6</td>
+<td style="text-align: right">40.15</td>
+<td style="text-align: right">36</td>
+<td style="text-align: right">29.47</td>
+<td style="text-align: right">1,981</td>
+<td style="text-align: right">110</td>
+</tr>
+<tr>
+<td style="text-align: right">11</td>
+<td style="text-align: right">42.33</td>
+<td style="text-align: right">33</td>
+<td style="text-align: right">33.58</td>
+<td style="text-align: right">1,300</td>
+<td style="text-align: right">136</td>
+</tr>
+<tr>
+<td style="text-align: right">12</td>
+<td style="text-align: right">55.48</td>
+<td style="text-align: right">51</td>
+<td style="text-align: right">32.92</td>
+<td style="text-align: right">1,764</td>
+<td style="text-align: right">177</td>
+</tr>
+</tbody>
+</table>
+<h3>Performance Under Load</h3>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th colspan="2"></th>
+<th>throughput</th>
+<th>latency</th>
+<th colspan="3">percentiles</th>
+</tr>
+<tr>
+<th colspan="2"></th>
+<th>RPM</th>
+<th colspan="4">milliseconds</th>
+</tr>
+<tr>
+<th>feed</th>
+<th>entity</th>
+<th>mean</th>
+<th>mean</th>
+<th>median</th>
+<th>95th</th>
+<th>99th</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right">6</td>
+<td style="text-align: left">participant</td>
+<td style="text-align: right">3,885</td>
+<td style="text-align: right">6</td>
+<td style="text-align: right">6</td>
+<td style="text-align: right">9</td>
+<td style="text-align: right">12</td>
+</tr>
+<tr>
+<td style="text-align: right">11</td>
+<td style="text-align: left">participant</td>
+<td style="text-align: right">3,035</td>
+<td style="text-align: right">8</td>
+<td style="text-align: right">7</td>
+<td style="text-align: right">14</td>
+<td style="text-align: right">19</td>
+</tr>
+<tr>
+<td style="text-align: right">12</td>
+<td style="text-align: left">participant</td>
+<td style="text-align: right">1,824</td>
+<td style="text-align: right">7</td>
+<td style="text-align: right">7</td>
+<td style="text-align: right">10</td>
+<td style="text-align: right">13</td>
+</tr>
+<tr>
+<td style="text-align: right">6</td>
+<td style="text-align: left">outbound</td>
+<td style="text-align: right">9,580</td>
+<td style="text-align: right">9</td>
+<td style="text-align: right">9</td>
+<td style="text-align: right">14</td>
+<td style="text-align: right">19</td>
+</tr>
+<tr>
+<td style="text-align: right">11</td>
+<td style="text-align: left">outbound</td>
+<td style="text-align: right">14,136</td>
+<td style="text-align: right">5.3</td>
+<td style="text-align: right">5</td>
+<td style="text-align: right">11</td>
+<td style="text-align: right">15</td>
+</tr>
+<tr>
+<td style="text-align: right">12</td>
+<td style="text-align: left">outbound</td>
+<td style="text-align: right">20,151</td>
+<td style="text-align: right">4.4</td>
+<td style="text-align: right">4</td>
+<td style="text-align: right">8</td>
+<td style="text-align: right">11</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/vertxVsPlay.pdf" alt="Vert.x vs Play">Writing Reactive Microservices for the JVM</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/vertxVsPlay.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/vertxVsPlay.pdf" alt="Vert.x vs Play">PDF</a> for offline viewing.</p>

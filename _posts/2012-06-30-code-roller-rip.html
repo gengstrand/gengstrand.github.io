@@ -1,0 +1,41 @@
+---
+layout: post
+status: publish
+permalink: /analysis/code-roller
+published: true
+title: Code Roller RIP
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 223
+wordpress_url: https://glennengstrand.info/blog/?p=223
+date: '2012-06-30 03:41:40 -0700'
+date_gmt: '2012-06-30 07:41:40 -0700'
+categories:
+- Process
+tags:
+- Software quality
+- IBM Rational Unified Process
+- Software development process
+- GForge
+- product management tools
+- software development
+comments: []
+---
+<p>I started a software product and project management web based tool back in 2008. Called Code Roller, this solution allowed teams to manage multi-release software projects throughout the full life cycle of software development. This project has run its course and will be closing this August. Here is the story of Code Roller; the good, the bad, and the ugly.</p>
+<p>I wrote this 477 PHP file web application for two very basic and somewhat common reasons. Because I wanted one and because I couldn't find one that was already available. I was director of engineering for a small Independent Software Vendor back in those days. We had about a half dozen team members building a very ambitious ASP.NET business web application and our sharepoint instance just wasn't cutting it. After an extensive evaluation and selection process, we ended up going with <a title="A Look at Sourceforge Enterprise Edition" href="http://www.linuxjournal.com/node/1000256" target="_blank">Source Forge Enterprise Edition</a> which is basically a ticketing system combined with a CMS and a wiki. It did the job but I always wanted something more. I wanted a solution that knew about the Software Development Life Cycle.</p>
+<p>After I moved on from that position, I wrote Code Roller. It treated requirements, use cases, designs, test plans, and defects as first class document types. It had an extensive change control oriented workflow where almost every artifact went through a review process. Users were presented with a schedule of automatically generated tasks that helped focus them on the next steps.</p>
+<p>I was rebelling against the Agile principle that <a title="Principles Behind the Agile Manifesto" href="http://agilemanifesto.org/principles.html" target="_blank">working software is the primary measure of progress</a> which has been interpreted as &nbsp; "all that matters is code." I was still of the mindset that good engineering meant &ldquo;measure twice, cut once.&rdquo; I believed that a light weight <a title="IBM Rational Software" href="http://www.ibm.com/Rational" target="_blank">Rational Unified Process</a> with a stream lined review oriented workflow would do a lot to improving software quality.</p>
+<p>I was wrong. The problem was that only a few believed as I did.</p>
+<p>It's hard to find a good coder. It's even harder to find a good designer. It's almost impossible to find the same person who can do both. It wasn't realistic to expect a full team to be able to do these things.</p>
+<p>While Code-Roller languished in obscurity, other product management tools took off. <a title="The Trac Project" href="http://trac.edgewall.org/" target="_blank">Trac</a> and <a title="Overview - Redmine" href="http://www.redmine.org/" target="_blank">Redmine</a> have gotten a lot of traction. Currently, I work in a shop that uses <a title="Bug Tracking Done Right" href="http://www.fogcreek.com/fogbugz/" target="_blank">FogBugz</a>. All of these tools are just like SFEE or <a title="GForge Collaberative Development" href="http://gforge.org/gf/" target="_blank">GForge</a>, a ticketing system combined with a CMS and a wiki. Apparently that is the formula that software development teams are most comfortable with.</p>
+<p>Coders do not like to document. While I use FogBugz to document every discovery and decision made along the way, similar to inventor's notes, most of my peers rarely add any comments to their tickets. Most tickets have a one sentence description of the problem that eventually gets marked as resolved without any additional comments. This is true even for large work items that take the entire sprint to complete. Don't get me wrong. The developers verbally discuss the problems and make good decisions. They just don't document that process. If they leave or simply don't remember why they did what they did later on, then that's just too bad isn't it?</p>
+<p>Maybe retaining the rationale behind decisions doesn't really matter after all. In today's big data world, products are constantly innovating. A/B tests change how your application works almost continuously and the app works differently for different groups of users. Who cares why you chose a three step registration funnel when it will change next week anyway? Perhaps the philosophy of &ldquo;measure twice, cut once&rdquo; has merit with a bi-annual release cycle but not so much when you release four times a day.</p>
+<p>Some groups have a longer release cycle than others. Where I work now, there are several client (e.g.&nbsp; web, desktop, mobile, touch) developer groups whose features change quite rapidly. There is an API team whose features change less frequently. I am in the platform group whose features evolve slowly over months. The client teams are the biggest and the platform team is the smallest and you don't chose a product management tool to satisfy the smallest group of people.</p>
+<p>So, Rest In Peace Code Roller. I'm glad that I knew you but your days in the sun are done.</p>
+<p>
+<a href="https://glennengstrand.info/media/codeRollerUsageAnalysis.pdf" alt="The Code Roller Project: User Activity">The Code Roller Project: User Activity</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/codeRollerUsageAnalysis.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

@@ -1,0 +1,107 @@
+---
+layout: post
+status: publish
+permalink: /analytics/distributed/functional/programming
+published: true
+title: Distributed Computing and Functional Programming
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 351
+wordpress_url: https://glennengstrand.info/blog/?p=351
+date: '2014-11-04 00:48:55 -0800'
+date_gmt: '2014-11-04 04:48:55 -0800'
+categories:
+- Technology
+- big data
+- architecture
+tags:
+- Hadoop
+- scala
+- cascading
+- clojure
+comments: []
+---
+<p>In a <a href="https://glennengstrand.info/analytics/fp" title="Functional Programming and Big Data">previous blog on some big data open source projects covered at OSCON 2014</a>, I reviewed three distributed computing functional programming technologies by using them to write a simple aggregation report. In that blog, I mentioned reproducing the news feed performance map reduce job from a <a href="https://glennengstrand.info/software/architecture/oss/clojure" title="Building a Scalable News Feed Web Service in Clojure">Clojure news feed service</a> that I test ran on AWS in both Clojure/Cascalog and Scala/Spark. Let's dig in and see what there is to see.</p>
+<p>At that time, I mentioned using <a href="https://spark.apache.org/streaming/" title="Spark Streaming">Spark Streaming</a> primarily because that particular technology has gotten a lot of traction in the big data space lately. After an architectural review, I realized that Spark Streaming is just Spark Map Reduce where the data stream is discretized into multiple Resilient Distributed Datasets using a time based window. That approach to streaming isn't really relevant to the sample problem that I am working with so I went back to using normal Spark Map Reduce.</p>
+<p>So, what is this news feed performance map reduce job? The input to this job is a little over four million data points that include a time stamp, an operation being performed, an entity type being operated on, and the number of milliseconds that it took to perform that operation on that entity. Each row of the output represents performance data for a single minute. The metrics are broken down by entity and operation and include the number of requests, the median latency of the requests, and the 95th percentile. This report is then used by an ETL program to load an OLAP cube. I picked this because it is too complex to be handled by the default functionality or by simpler, less expressive map reduce technologies such as a single Hive query. We are going to have to roll up our sleeves and do some custom coding.</p>
+<p>I originally implemented this as a <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/NewsFeedPerformance/src/main/java/com/dynamicalsoftware/feed/mapreduce/AggregatePerformanceData.java" title="Aggregate Performance Data">traditional map reduce job written in Java</a>. You most probably already know that Hadoop Map Reduce has a map phase and a reduce phase but did you know that there is also a combiner phase? Every job provides their own mapper and reducer but almost no jobs provide a combiner because the default combiner already does just what you need. </p>
+<p>There has been some push back from young engineers against the Java programming language recently. Why is that? Java is strongly typed and very verbose when it comes to coding. At its inception, Java was considered a high level language but these days people who code in Java usually have to think at a relatively low level of abstraction. That means more lines of code which means more to think about and more opportunities for bugs. At least that is the consensus wisdom.</p>
+<p>After that I coded a <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/perf/src/perf/core.clj" title="perf core">behaviorally equivalent Cascalog map reduce job written in Clojure</a>. <a href="http://cascalog.org/" title="Data processing on Hadoop without the hassle">Cascalog</a> is built on top of <a href="http://www.cascading.org/" title="Application Platform for Enterprise Big Data">Cascading</a> which is an application development platform built on top of Hadoop. It features taps, a higher level of abstraction by which data is both input from and output to. A special Cascalog macro allows you to write reduce side aggregators in normal looking Clojure code.</p>
+<p>Clojure looks like lisp on steroids but runs in the JVM. Clojure is weakly typed. That means you don't have to specify the types of identifiers so less coding. It also means that the compiler doesn't do any any type checking which means you run into those type of bugs at runtime. Compared to old school Java, Clojure coders get to think about their problems in terms of a higher level of abstraction. A little bit of Clojure code does a lot so it tends to look very dense.</p>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th>&nbsp;</th>
+<th>Java/Map Reduce</th>
+<th>Clojure/Cascalog</th>
+<th>Scala/Spark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td valign="top">
+source code size in bytes
+</td>
+<td valign="top">
+4256
+</td>
+<td valign="top">
+2809
+</td>
+<td valign="top">
+1707
+</td>
+</tr>
+<tr>
+<td valign="top">
+run time in seconds
+</td>
+<td valign="top">
+49
+</td>
+<td valign="top">
+77
+</td>
+<td valign="top">
+52
+</td>
+</tr>
+<tr>
+<td valign="top">
+what was awesome
+</td>
+<td valign="top">
+old school is still the fastest
+</td>
+<td valign="top">
+feels like a query language but with easy to code reduce side user defined functions
+</td>
+<td valign="top">
+most natural way to write distributed applications using functional programming
+</td>
+</tr>
+<tr>
+<td valign="top">
+what was disappointing
+</td>
+<td valign="top">
+lots of typing
+</td>
+<td valign="top">
+the reduce side aggregator would not work without a superfluous print statement
+</td>
+<td valign="top">
+Scala Build Tool is immature
+</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, I coded a <a href="https://github.com/gengstrand/clojure-news-feed/blob/master/client/perf2/src/main/scala/perf/NewsFeedPerformance.scala" title="News Feed Performance">behaviorally equivalent Apache Spark job written in Scala</a>. <a href="https://spark.apache.org/" title="Lightening Fast Cluster Computing">Apache Spark</a> is an open source general engine for large scale data processing. You can run it in stand alone or clustered mode. You can run Spark jobs that can read from and/or write to HDFS data. You can configure Spark to integrate with Hadoop Map Reduce either through <a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html" title="Apache Hadoop NextGen MapReduce (YARN)">YARN</a> or <a href="http://mesos.apache.org/" title="Apache Mesos">Mesos</a>.</p>
+<p>Initially, the nomenclature in Spark was a little misleading for me. In Spark, you are always operating on RDDs or Resiliant Distributed Datasets. An RDD has functions such as reduce and reduceByKey. These functions are more akin to the combiner in Hadoop Map Reduce than to the reducer. Use the groupByKey method followed by another map method in order to achieve reduce side functionality.</p>
+<p>Apache Spark claims to be faster than Hadoop. It is faster than Hive or Pig. From my limited experience, you can achieve on par performance with Spark if you are willing to write old school Java Map Reduce programs.</p>
+<p>Scala looks like Java on steroids and also runs in the JVM. Like Java, Scala is strongly typed. Unlike Java, it takes a lot less lines of code to do in Scala what you can do in Java. How is that? You don't have to specify the types of identifiers so less coding. The compiler is still figuring out the types of identifiers even if you don't identify that. This allows you to have compile time checks on the types of things without you having to specify them. Scala coding is also at a higher level of abstraction which nets fewer lines of code too.</p>
+<p>So, what is the most natural fit between functional programming and distributed computing? I would have to say that it is Scala and Apache Spark. That RDD looks just like another lazy sequence with very similar map reduce semantics. Functional programming does seem to be well suited to processing streams of data. Integrating functional programming applications with open source big data application platforms, such as Cascading or Spark, that sit on top of Hadoop does seem to make logical sense to me. It must also make logical sense to the top Hadoop vendors as <a href="http://blog.cloudera.com/blog/2013/11/cascading-spring-and-spark-development-choices-for-cdh-users-expand/" title="Cascading, Spring, and Spark: Development Choices for CDH Users Expand">Cloudera supports both Cascading and Spark</a> and Hortonworks supports both <a href="http://hortonworks.com/labs/developer-tools/" title="Simplify Hadoop Cluster Operations">Cascading</a> and <a href="http://hortonworks.com/hadoop/spark/" title="Simplify Hadoop Cluster Operations">Spark</a> too.</p>

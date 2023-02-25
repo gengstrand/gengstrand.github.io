@@ -1,0 +1,79 @@
+---
+layout: post
+status: publish
+permalink: /analytics/fp
+published: true
+title: Functional Programming and Big Data
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 341
+wordpress_url: https://glennengstrand.info/blog/?p=341
+date: '2014-09-07 17:52:41 -0700'
+date_gmt: '2014-09-07 21:52:41 -0700'
+categories:
+- Technology
+- big data
+- architecture
+tags:
+- apache
+- Hadoop
+- netflix
+- pigpen
+- cascalog
+- spark
+comments: []
+---
+<h2>Functional Programming and Big Data for the Impatient</h2>
+<p>
+Learn about the future of Functional Programming and Big Data by reading this evaluation of three relevant open source technologies; <a href="https://github.com/Netflix/PigPen/" rel="Netflix/PigPen">PigPen</a>, <a href="http://cascalog.org/" rel="Data processing on Hadoop without the hassle">Cascalog</a>, and <a href="https://spark.apache.org/" rel="lightening fast cluster computing">Apache Spark</a>. A small report is written, that reports on the per minute count of post actions from a two hour test run of a web service that generated 4077809 events, in all three languages and environments. Based on the findings of that development work, these three technologies are evaluated and compared.</p>
+<table>
+<thead>
+<tr>
+<th>measure</th>
+<th>Pigpen</th>
+<th>Cascalog</th>
+<th>Apache Spark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lines of code</td>
+<td>27</td>
+<td>28</td>
+<td>5</td>
+</tr>
+<tr>
+<td>run time in seconds</td>
+<td>123</td>
+<td>85</td>
+<td>13</td>
+</tr>
+<tr>
+<td>the good</td>
+<td>easy to understand</td>
+<td>implicit grouping</td>
+<td>small and fast</td>
+</tr>
+<tr>
+<td>the bad</td>
+<td>broken and cumbersome</td>
+<td>funky punctuation syntax</td>
+<td>limited reduce side functionality</td>
+</tr>
+<tr>
+<td>the ugly</td>
+<td>evil pig UDF hack</td>
+<td>not truly functional</td>
+<td>not always using hadoop</td>
+</tr>
+</tbody>
+</table>
+<p>
+If you want more detail but are too impatient to read the 5 page document below, then check out this <a href="http://www.slideshare.net/gengstrand/functional-programmingbigdata" rel="Three Functional Programming Technologies for Big Data">slide deck summary</a>.</p>
+<p>
+<a href="https://glennengstrand.info/media/fpbd.pdf" alt="Functional Programming and Big Data">Functional Programming and Big Data</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/fpbd.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

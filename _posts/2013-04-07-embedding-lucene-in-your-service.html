@@ -1,0 +1,37 @@
+---
+layout: post
+status: publish
+permalink: /embedded/lucene
+published: true
+title: Embedding Lucene in Your Service
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: It is fairly easy to embed Lucene into your application at the service layer.
+  This approach can add high performance keyword based search capability to your application.
+wordpress_id: 236
+wordpress_url: https://glennengstrand.info/blog/?p=236
+date: '2013-04-07 13:17:56 -0700'
+date_gmt: '2013-04-07 17:17:56 -0700'
+categories:
+- Technology
+- search
+tags:
+- Lucene
+- Apache Solr
+- Full text search
+comments: []
+---
+<p>The <a href="http://lucene.apache.org/core/" title="Apache Lucene Core" target="_blank">Apache Lucene project</a> is a world class open source technology for adding keyword based search capability over big data to your application. Developers can easily embed Lucene into their application. Here, I will explain how I embedded Lucene into a service that handles the create, read, and update requests from a web 2.0 application.</p>
+<p>With Lucene, you add documents to an index. Those documents are available to appear in search results once they have been committed. We will first cover how to add documents to the index. We do this with an IndexWriter. Because Lucene is keyword based, you always have an Analyzer which is responsible for extracting terms from a corpus of text. When opening the writer, you must specify what open mode that Lucene is to use. You can either create the index, overwrite the index, or append to the index. There is a create and append option too which is the most common. You add documents to the index writer and each document is composed of a collection of indexable fields. These fields can be of various types; long, float, string. Only the text field is tokenized (i.e. for keyword based search). Fields can be stored and/or indexed. When a field is stored, it is available for retrieval in search results. When a field is indexed, then you can filter or query by that field. Adding documents to an index writer is an upsert operation. How Lucene knows whether or not to update or insert depends on the term used as the primary key. In Lucene, a term identifies a field in the document and what value that field should have.</p>
+<p>My application supports multiple entities with the ability to search only within a single entity or across all entities. Because of that, An entity field is included with each document that is both indexed and stored. The primary key is also name spaced with the entity type.</p>
+<p>Documents are not available for searching until they have been committed to the index which is a relatively expensive operation. Because of that, it is inadvisable to commit each document as it is being added. In this application, we batch up the documents to be committed asynchronously. A separate thread issues the commit operation to the index writer after a configurable interval of time has elapsed. Special care to serialization of access to the document store is needed in order to avoid multi-threading bugs.</p>
+<p>In order to conduct a search operation against a Lucene index, an analyzer is needed. A query parser converts the keywords into a query. You can also apply various term filters in order to further restrict the results of a query. Sometimes it is hard for developers to understand the difference between a query and a filter. Filters are simple but fast and usually, but not always, follow the field:value pattern. The query is elaborate and usually includes some combination of more intelligent matching features. Examples include keyword searching, fuzzy searching, proximity search, matching within a range, spatial searching, joins, boosting, more like this, etc. Queries are slower than filters. Filters are used to further restrict query results. If all your criteria could be specified as filters, then you should consider using a relational database instead.</p>
+<p>You can elect to cap the results to a number that is less than the full set of documents matching the search criteria. When you perform a search, what you get back is a TopDocs object which contains the top documents whose score is the highest. That is also how results are sorted. Each result includes the matching document and a score that reflects how well the document matches the search criteria. </p>
+<p>Please recall that documents are collections of indexable fields and that a field can be indexed, stored, or both. You can retrieve the value of an indexable field whether or not is was stored but be advised that value retrieval from non stored fields may save disk space is much slower.</p>
+<p>Some configurable parameters are needed to store documents in an index and to search for them. What this app has as configurable parameters are the following; maximum search results, batch update delay, and the root folder where the index is stored. If you looked at the contents of that folder, you would not see individual documents. Rather, you would see some number of fdt, fdx, fnm, frq, prx, tim, tip, cfe, cfs, and si files. Each group of those makes up a segment which is how the data is organized in the file system.</p>
+<p>The index reader, the index writer, and the document store must all be closed before they can be released. For this application, the reader is closed after the search results are extracted, the writer is closed after the updates have been committed, and the store is closed when the service is shutting down.</p>
+<p>It is fairly easy to embed Lucene into your application at the service layer. This approach can add high performance keyword based search capability to your application. It is fast but it doesn't support scaling out your service to multiple servers. To do that, you would want to wrap Lucene in its own stand-alone server that is separate from your service. There is no need to reinvent the wheel because <a href="http://lucene.apache.org/solr/" title="Apache Solr" target="_blank">Solr</a> is an open source project that already does that. Solr 4 integrates with another open source project <a href="http://zookeeper.apache.org/" title="Apache Zookeeper" target="_blank">Zookeeper</a> to provide a cluster aware search capability where one node takes the commits and the other nodes replicate the index from the master in order to distribute search load.</p>

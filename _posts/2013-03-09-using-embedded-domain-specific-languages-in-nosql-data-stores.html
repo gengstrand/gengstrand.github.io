@@ -1,0 +1,30 @@
+---
+layout: post
+status: publish
+permalink: /nosql/cassandra/cql
+published: true
+title: Using Embedded Domain Specific Languages in NoSQL Data Stores
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 287
+wordpress_url: https://glennengstrand.info/blog/?p=287
+date: '2013-03-09 14:29:58 -0800'
+date_gmt: '2013-03-09 18:29:58 -0800'
+categories:
+- Technology
+- big data
+tags: []
+comments: []
+---
+<p>This story starts long ago with a <a title="Ten things I learned while writing a Model Driven Software Development system for Google Closure" href="https://glennengstrand.info/blog/?p=227" target="_blank">Model Driven Software Development system</a> that I wrote. The generated server side Java code used JDBC to access data in a database. Later on, I provided support for Cassandra, Amazon SimpleDB, and Solr by writing JDBC connectors for those NoSQL data stores.</p>
+<p>It was nothing fancy. I subclassed Connection and PreparedStatement. I used <a title="ANTLR" href="http://www.antlr.org/" target="_blank">Antlr</a> to parse the SQL. It was a very simplified and stripped down version of SQL. The Cassandra connector would map tables to column families and fields to columns. The Hector API was used where a select would end up with an Indexed Slices Query and an insert or update would end up calling add insertion on a mutator. The only thing you could do with the where clause was filter by primary key field = value. Nothing to see here. Pretty straight forward.</p>
+<p>That would be the end of this story except recently the DataStax folks released a new version of <a title="The Apache Cassandra Project" href="http://cassandra.apache.org/" target="_blank">Cassandra</a> where the preferred mode of communication is a DSL they call <a title="CQL" href="http://cassandra.apache.org/doc/cql/CQL.html" target="_blank">CQL</a>. The Cassandra Query Language is very similar to the Structured Query Language. You can create schemas, change, and access data against narrow rows in a way very reminiscent of my JDBC connectors. CQL also works against wide row data including the time series use case that is Cassandra's best fit. The first part of the compound column key name becomes the primary key for each row in the CQL result set and the second part becomes the column name. Very clever.</p>
+<p>Why did they do this? Well, it wouldn't be the first time that a non-relational db technology vendor adapted SQL for their own purposes. OLAP vendors have their own extension to SQL called <a title="MultiDimensional eXpressions" href="http://en.wikipedia.org/wiki/MultiDimensional_eXpressions" target="_blank">MDX</a>. <a title="Welcome to Hive!" href="http://hive.apache.org/" target="_blank">HIVE</a> is a way to access Hadoop File System data through commands that look like SQL. I think the real reason why vendors do this is familiarity. Developers who already know SQL may be more likely to use Cassandra if they believed that they didn't have to learn yet another API.</p>
+<p>This is what I like about embedding a domain specific language in your technology. It can make your app more declarative. Separating out data access into a language that is more expressive, in the context of the application's domain, can improve your program's readability while at the same time increasing its flexibility. These are good things.</p>
+<p>So DSL is good. What I don't like about this trend is picking SQL as the DSL. Don't get me wrong. I love SQL. It is a very expressive way to describe sets of data. The reason why I don't like embedding SQL into NoSQL is the very reason why vendors do, familiarity. There are a lot of parts to SQL that programmers may assume that they can use with a NoSQL technology but they either can't or shouldn't. What is missing in CQL are field expressions, grouping, joins, and nested queries. Even more dangerous is the parts to SQL that CQL does support but will not scale.</p>
+<p>You should not explicitly sort in CQL. Instead, you should always denormalize with materialized views for each way that you will need to access the same data with a different ordering. You can build new indexes in CQL but performance will degrade significantly as the sort space increases. Something similar happens when you attempt to use complex filtering criteria in CQL. Just say no to anything but the most basic features of SQL in CQL.</p>
+<p>I advocate strongly for the use of embedding domain specific programming languages into NoSQL data stores but exercise caution. Trying to make NoSQL look like SQL is an effort that, at first glance may seem glamourous and likely to attract attention, will in the end cause disappointment and dissatisfaction.</p>

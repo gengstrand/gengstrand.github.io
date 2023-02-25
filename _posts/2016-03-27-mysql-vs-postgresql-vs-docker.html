@@ -1,0 +1,91 @@
+---
+layout: post
+status: publish
+permalink: /software/performance/mysql/postgres/docker
+published: true
+title: MySql vs PostGreSql vs Docker
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 393
+wordpress_url: https://glennengstrand.info/blog/?p=393
+date: '2016-03-27 17:32:45 -0700'
+date_gmt: '2016-03-27 21:32:45 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- mysql
+- postgresql
+- docker
+comments: []
+---
+<style type="text/css">
+.leftdiv, .centerdiv, .rightdiv<br />
+{<br />
+   text-align: center;<br />
+}<br />
+@media only screen and (min-width: 1020px)<br />
+{<br />
+   .leftdiv<br />
+   {<br />
+      text-align: left;<br />
+   }<br />
+   .rightdiv<br />
+   {<br />
+      text-align: right;<br />
+      width: 900px;<br />
+      font-size: small;<br />
+      position: relative;<br />
+      top: -30px<br />
+   }<br />
+}<br />
+</style>
+<p>In my last blog, I compared two functionally identical micro-services, one written in Scala and the other in Clojure, in terms of performance under load in AWS. In this blog, I compare the performance of the <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed2">Scala micro-service</a> under load in AWS running with MySql, running with PostGreSql, and running both with and without Docker. For a non-trivial, heterogeneous data source micro-service with only one thing different per test run (MySql vs PostGreSql and no container vs Docker), I was able to get some good insight on how these popular technology choices stack up against each other in terms of performance.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/mysqlThroughput.png" alt="MySql Throughput" />
+<div class="rightdiv">MySql Throughput Per Minute</div>
+<p>Let's review the environment in which these performance tests were conducted. I would always use a development configured db m3 large RDS instance with 100 GB SSD. I would always use 7 m3 large EC2 instances for Cassandra, Redis, Kafka, Solr, Elastic Search with Kibana, the news feed micro-service, and the load test application. Each of these instances had only 8 GB hard disk space.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/mysqlMean.png" alt="MySql Mean" />
+<div class="rightdiv">MySql Mean Latency in Milli Seconds Per Minute</div>
+<p>I did the same thing with every test run. I would let it run until the Cassandra instance ran out of disk space then I would look at the last hour of the test run which was compared with the other test runs. I would always release all instances after the single test run was completed. The next test run would always start with fresh instances.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/mysqlMedian.png" alt="MySql Median" />
+<div class="rightdiv">MySql Median Latency in Milli Seconds Per Minute</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/mysql95Percentile.png" alt="MySql 95th Percentile" />
+<div class="rightdiv">MySql Latency 95th Percentile</div>
+<p>The load test application has not changed. It runs 3 concurrent threads where each thread keeps running the same batch operations. In each batch, 10 participants get created. Each participant gets from 2 to 4 friends. Then each participant broadcasts 10 stories of 150 words each. It is this broadcast operation that gets measured, compared, and reported on.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/postgresThroughput.png" alt="PostGreSql Throughput" />
+<div class="rightdiv">PostGreSql Throughput Per Minute</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/postgresMean.png" alt="PostGreSql Mean" />
+<div class="rightdiv">PostGreSql Per Minute Average Latency in Milli Seconds</div>
+<p>The micro-service logs the latency of each request to Kafka. The <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/perf3">perf3</a> application consumes these messages, aggregates them on a per entity and operation basis, then updates elastic search with the per minute throughput, mean, median, and 95th percentiles. The screen shots you see here come from a dashboard on this data that I set up in Kibana.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/postgresMedian.png" alt="PostGreSql Median" />
+<div class="rightdiv">PostGreSql Per Minute 50th Percentile Latency</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/postgres95Percentile.png" alt="PostGreSql 95th Percentile" />
+<div class="rightdiv">PostGreSql 95th Percentile Latency</div>
+<p>The first test was with using MySql for the participant and friends information and the micro-service ran without any container. The throughput was very consistent and averaged out to 13,961 requests per minute. Average per minute latency was 51 ms but started at a little over 40 ms and ended at about 60 ms. So the latency would climb over time. </p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerThroughput.png" alt="Docker Bridge Mode Throughput" />
+<div class="rightdiv">Docker Bridge Mode Throughput Per Minute</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerMean.png" alt="Docker Bridge Mode Mean" />
+<div class="rightdiv">Docker Bridge Mode Per Minute Average Latency</div>
+<p>In the next test, I replaced MySql with PostGreSql. Throughput was also very stable and 10% better than MySql with a per minute average of 15,502 requests per minute. Latency was very similar to the MySql test run both in terms of number of milliseconds and in the rate that the duration would climb over time.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerMedian.png" alt="Docker Bridge Mode Median" />
+<div class="rightdiv">Docker Bridge Mode 50th Percentile Latency</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/docker95Percentile.png" alt="Docker Bridge Mode 95th Percentile" />
+<div class="rightdiv">Docker Bridge Mode 95th Percentile Latency</div>
+<p>The test run after that was also with using PostGreSql but this time the micro-service was running in Docker in bridge mode. Bridge mode means that the container image runs with its own IP stack and inbound requests go through a NAT layer. This is the default mode which is supposed to be more secure. Throughput was also very consistent and averaged out to 15,132 requests per minute. This is 3% lower than the no container test run. Latency was 30% slower and climbed but not as quickly as the no container test run.</p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerHostThroughput.png" alt="Docker Host Mode Throughput" />
+<div class="rightdiv">Docker Host Mode Throughput Per Minute</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerHostMean.png" alt="Docker Host Mode Mean" />
+<div class="rightdiv">Docker Host Mode Per Minute Average Latency</div>
+<p>In the final test run, PostGreSql and Docker was still being tested. This time, the micro-service was run with Docker host mode networking. Host mode means that the container image runs with the same IP stack as the host machine. In this run, both throughput and latency was very similar to the test run with PostGreSql and no container. </p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerHostMedian.png" alt="Docker Host Mode Median" />
+<div class="rightdiv">Docker Host Mode 50th Percentile Latency</div>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/dockerHost95Percentile.png" alt="Docker Host Mode 95th Percentile" />
+<div class="rightdiv">Docker Host Mode 95th Percentile Latency</div>
+<p>In conclusion, I would have to say that the AWS RDS version of PostGreSql is now just as good as the AWS RDS version of MySql when it comes to latency. Furthermore, PostGreSql has overtaken MySql when it comes to throughput. </p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/throughput.png" alt="Throughput Summary" /></p>
+<p>There are a lot of reasons for running micro-services in Docker. There will be no performance penalty if you run your micro-service in Docker with host mode networking configured. </p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2016/03/latency.png" alt="Latency Summary" /></p>

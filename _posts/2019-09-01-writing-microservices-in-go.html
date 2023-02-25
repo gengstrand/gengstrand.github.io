@@ -1,0 +1,86 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/microservice/golang
+published: true
+title: Writing Microservices in Go
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 491
+wordpress_url: https://glennengstrand.info/blog/?p=491
+date: '2019-09-01 14:25:53 -0700'
+date_gmt: '2019-09-01 18:25:53 -0700'
+categories:
+- Technology
+- architecture
+- cloud computing
+tags:
+- golang
+comments: []
+---
+<p>
+Interest in the Go programming language has steadily increased since it was first released in 2012. Although it is known mostly for its use in writing infrastructure based systems, many organizations are starting to consider it for application development. If you are thinking about writing your next business focused microservice in Go or if you are wondering how effective Go is for applications work, then this article is for you. In this article, you will learn about the major features of the Go programming language and how they impact microservice development both in terms of code complexity and performance under load.</p>
+<p>
+The article itself will display at the bottom of this topic. Here are the references with links to online resources used in the making of this evaluation.</p>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th>reference</th>
+<th>link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>article below</td>
+<td><a href="https://glennengstrand.info/media/writingMicroservicesInGo.pdf" alt="Should you write business microservices using Golang?">Writing Microservices in Go</a></td>
+</tr>
+<tr>
+<td>swagger templates</td>
+<td><a href="https://github.com/swagger-api/swagger-codegen/tree/master/modules/swagger-codegen/src/main/resources/go-server" alt="swagger codegen go-server templates">go-server</a></td>
+</tr>
+<tr>
+<td>golang news feed microservice</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed9" alt="Go API Server for newsfeed">source code</a></td>
+</tr>
+<tr>
+<td>load testing</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/k8s/README.md" alt="How to load test this microservice on Kubernetes">Kubernetes instructions</a></td>
+</tr>
+<tr>
+<td>Http Request Multiplexer</td>
+<td><a href="http://www.gorillatoolkit.org/pkg/mux" alt="Used by go-server as the request router">mux</a></td>
+</tr>
+<tr>
+<td>Go's standard driver for MySql</td>
+<td><a href="https://godoc.org/github.com/go-sql-driver/mysql" alt="godoc for mysql package">mysql</a></td>
+</tr>
+<tr>
+<td>Go's standard driver for Redis</td>
+<td><a href="https://godoc.org/github.com/go-redis/redis" alt="godoc for redis package">redis</a></td>
+</tr>
+<tr>
+<td>Go's standard driver for Cassandra</td>
+<td><a href="http://gocql.github.io/" alt="landing page for GoCQL">gocql</a></td>
+</tr>
+<tr>
+<td>uuid package</td>
+<td><a href="https://godoc.org/github.com/google/uuid" alt="godoc for uuid package">uuid</a></td>
+</tr>
+<tr>
+<td>ElasticSearch driver</td>
+<td><a href="https://godoc.org/gopkg.in/olivere/elastic.v3" alt="godoc for elastic package">elasticsearch</a></td>
+</tr>
+<tr>
+<td>motivation</td>
+<td><b>update:</b> In the article below, I claim that the reason why Go lacks so many modern language features is better performance with less complexity. This written transcript of a modified version of the keynote talk given by Rob Pike at the SPLASH 2012 conference in Tucson, Arizona, on October 25, 2012 entitled <a href="https://talks.golang.org/2012/splash.article" alt="Language Design in the Service of Software Engineering">Go at Google</a> provides more clarity on that.</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/writingMicroservicesInGo.pdf" alt="Writing Microservices in Go">Writing Microservices in Go</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/writingMicroservicesInGo.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/writingMicroservicesInGo.pdf" alt="Writing Microservices in Go">PDF</a> for offline viewing.</p>

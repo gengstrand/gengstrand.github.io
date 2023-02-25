@@ -1,0 +1,70 @@
+---
+layout: post
+status: publish
+permalink: /ccm/internals
+published: true
+title: The Making of the Conversational Content Management Beta
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: With online collaboration such as Google Apps, the users get no clear clues
+  as to who to authoring now. There is a chat area where participants can discuss
+  the content but it does not directly become the content itself. With CCM, the content
+  authoring medium is basically a chat room. People discuss the topic and a chat reporter
+  records the conversations then distills it down to an actionable summary.
+wordpress_id: 199
+wordpress_url: https://glennengstrand.info/blog/?p=199
+date: '2011-10-15 16:00:57 -0700'
+date_gmt: '2011-10-15 20:00:57 -0700'
+categories:
+- Technology
+tags:
+- apache
+- mysql
+- Collaboration
+- Extensible Messaging and Presence Protocol
+- Java
+- Tigase
+- real-time communications
+- Social information processing
+- Open source
+- online collaborative document creation environments
+- Content Management
+- Strophe
+- Hippo CMS
+- Jack Rabbit
+- MySQL AB
+- Apache web server
+- Content management systems
+comments: []
+---
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Maybe it is just the inner entrepreneur but I really enjoy getting to explore an innovative idea and bringing it to the light of day. That was perhaps the main reason why I enjoyed working on the Conversational Content Management beta so much.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">What was innovative about this project was in the way that the collaboration problem was addressed. In most online collaborative document creation environments, the actual editing is the visual equivalent to what was used to be called half duplex. If you move the mouse and started typing, then you rudely took away control from whoever was editing last. This has a very chilling effect on the fragile process of group creative interaction.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Have you ever served on a board of directors? The monthly board meeting usually looks like this. A group of people discuss the agenda while an assistant takes notes. Later on, the highlights (i.e. the actionable summary) get published.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">What if you could have access to that assistant in any meeting? That is what the Conversational Content Management beta is all about. All collaboration is done in the chat room itself. A robot records the entire conversation and extracts out the actionable summary later. The following technical white paper discusses how and introduces the following open source projects used to create this beta and accelerate its time to market.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Hippo CMS is an open source Content Management System written in Java. Its emphasis is on publishing with a limited number of authors with access available to the anonymous public at large.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Strophe is an open source Java Script library that permits web pages to access an XMPP chat server via BOSH.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Code Igniter is a PHP MVC framework for writing web applications hosted by the Apache web server.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Jack Rabbit is an implementation of the Java Content Repository which is how the chat reporter publishes content in the CMS.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Tigase is the open source XMPP server, written in Java, that serves as the chat room implementation.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">Thrift is the communications layer between Tigase and the chat session manager.</div>
+<div id="_mcePaste" style="position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px; overflow-x: hidden; overflow-y: hidden;">MySql is the open source relational data base where the web site and the chat server store their data.</div>
+<p>Maybe it is just the inner entrepreneur but I really enjoy getting to explore an innovative idea and bringing it to the light of day. That was perhaps the main reason why I enjoyed working on the Conversational Content Management beta so much.</p>
+<p>What was innovative about this project was in the way that the collaboration problem was addressed. In most online collaborative document creation environments, the actual editing is the visual equivalent to what was used to be called half duplex. If you move the mouse and started typing, then you rudely took away control from whoever was editing last. This has a very chilling effect on the fragile process of group creative interaction.</p>
+<p>Have you ever served on a board of directors? The monthly board meeting usually looks like this. A group of people discuss the agenda while an assistant takes notes. Later on, the highlights (i.e. the actionable summary) get published.</p>
+<p>What if you could have access to that assistant in any meeting? That is what the Conversational Content Management beta is all about. All collaboration is done in the chat room itself. A robot records the entire conversation and extracts out the actionable summary later. The following technical white paper discusses how and introduces the following open source projects used to create this beta and accelerate its time to market.</p>
+<ul>
+<li><a title="Hippo CMS - Empower your Audience" href="http://onehippo.com" target="_blank">Hippo CMS</a> is an open source Content Management System written in Java. Its emphasis is on publishing with a limited number of authors with access available to the anonymous public at large.</li>
+<li><a title="Strophe - libraries for XMPP poets" href="http://strophe.im/" target="_blank">Strophe</a> is an open source Java Script library that permits web pages to access an XMPP chat server via BOSH.</li>
+<li><a title="Code Igniter - open source PHP web application framework" href="http://codeigniter.com/" target="_blank">Code Igniter</a> is a PHP MVC framework for writing web applications hosted by the <a title="The Apache HTTP Server Project" href="http://httpd.apache.org/" target="_blank">Apache web server</a>.</li>
+<li><a title="Welcome to Apache Jack Rabbit" href="http://jackrabbit.apache.org/" target="_blank">Jack Rabbit</a> is an implementation of the <a title="Introducing the Java Content Repository" href="http://www.ibm.com/developerworks/java/library/j-jcr/" target="_blank">Java Content Repository</a> which is how the chat reporter publishes content in the CMS.</li>
+<li><a title="Tigase Open Source and Free Jabber/XMPP Server" href="http://tigase.org" target="_blank">Tigase</a> is the open source XMPP server, written in <a title="OpenJDK" href="http://openjdk.java.net/" target="_blank">Java</a>, that serves as the chat room implementation.</li>
+<li><a title="Apache Thrift" href="http://thrift.apache.org/" target="_blank">Thrift</a> is the communications layer between Tigase and the chat session manager.</li>
+<li><a title="MySql - The world's most popular open source databas" href="http://www.mysql.com/" target="_blank">MySql</a> is the open source relational data base where the web site and the chat server store their data.</li>
+</ul>
+<p>
+<a href="https://glennengstrand.info/media/ccmanatomy.pdf" alt="Conversational Content Management">Conversational Content Management</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/ccmanatomy.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>

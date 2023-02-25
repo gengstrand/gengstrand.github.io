@@ -1,0 +1,56 @@
+---
+layout: post
+status: publish
+permalink: /customize/tigase
+published: true
+title: Top Ten Ways to Customize Tigase
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: Tigase is a highly customizable XMPP server that provides an excellent, scalable
+  platform for real-time communications that is easy to extend to meet your specific
+  needs. There are over seventy different ways in which you can extend or enhance
+  chat server functionality  in Tigase but I am going to cover just the top ten here.
+wordpress_id: 195
+wordpress_url: https://glennengstrand.info/blog/?p=195
+date: '2012-01-01 20:37:22 -0800'
+date_gmt: '2012-01-02 00:37:22 -0800'
+categories:
+- Technology
+- real-time communications
+tags:
+- Extensible Messaging and Presence Protocol
+- Java
+- Tigase
+- XMPP
+- OSS
+- chat
+- IM
+- real-time communications
+- Groovy
+comments: []
+---
+<p>With last month's announcement that <a title="Microsoft opens up Messenger with XMPP access" href="http://www.techrepublic.com/blog/australia/microsoft-opens-up-messenger-with-xmpp-access/422" target="_blank">Microsoft is adopting XMPP in their Windows Live (was MSN) messenger</a> product, &nbsp;I thought that I would help you ring in the new year and celebrate the <a title="Skype adds XMPP support, IM interoperability next?" href="http://gigaom.com/2011/06/28/skype-xmpp-support/" target="_blank">ever</a> <a title="Cleartext Enterprise IM App" href="http://www.cleartext.com/desktop.php">increasing</a> <a title="XMPP Is Hotter Than Ever: Cisco Acquires Jabber, Inc" href="http://metajack.im/2008/09/19/xmpp-is-hotter-than-ever/">popularity</a> of XMPP by publishing this post on some of the more efficacious ways in which you can customize the premier XMPP server technology Tigase in order to add Real Time Communications capability to your web based product or service.</p>
+<p>Most of Tigase's core code is written in Java. The best way to customize your version of Tigase is to build a Java project that extends Tigase classes or implements Tigase interfaces and to include the resulting JAR file in the libs folder. You tell Tigase about your classes through the init.properties file. There are over seventy different ways in which you can extend or enhance chat server functionality this way in Tigase but I am going to cover just the top ten here.</p>
+<p><strong>AuthRepository</strong></p>
+<p>Implement this interface to customize handling log in requests beyond what a single stored procedure call can do. If all you need to do is provide your own stored procedure, then stick with the TigaseCustomAuth implementation and specify your own stored procedure in the init.properties file.</p>
+<p><strong>AbstractMessageReceiver</strong></p>
+<p>Extend this abstract class to build a component. The most important methods to override are processPacket, getDefaults, and setProperties. The processPacket method is where you handle packets that are sent to this component. If you need to instrument your code with additional parameters, then use the getDefaults method to obtain your configuration out of the init.properties file. The setProperties method allows your component to accept dynamic properties that are set while Tigase is running.</p>
+<p><strong>XMPPProcessor</strong></p>
+<p>Extend this abstract class to build a plugin.. The Id method returns a string that must match what is in the &ndash;sm-plugins comma delimited list in order for this plugin to get loaded. The supElements and supNamespaces methods let Tigase know about the kinds of packets that this plugin supports. The init method is when your plugin gets initialized with configuration information from the init.properties file. The process method is what gets called when it is time for your plugin to process a packet.</p>
+<p><strong>What is the difference between a plugin and a component?</strong> Think of <a title="Plugin Development" href="http://www.tigase.org/content/plugin-development" target="_blank">plugins</a> as the best way to extend existing functionality or add new functionality to already existing or new stanzas no matter who sends or receives them. <a title="Component Development" href="http://www.tigase.org/content/component-development" target="_blank">Components</a> permit you to add server-side chat bots who respond to traditional stanzas such as IQ, presence, or message packets. Plugins register for particular stanza types and get invoked no matter who is the recipient. In order for the component to process a request, that request must be addressed to be sent to the JID of the component itself. When a plugin handles a request, it gets access to either the sender's (if outbound) or the receiver's (if inbound) session data. A component has no access to user session data when it is invoked. A plugin always runs in the JVM of the session manager so the only way to scale out plugins is clustering. Components can be configured as either internal or external which is a more natural and intuitive way to scaling out additional functionality. New in version 5.1.0 of Tigase is the ability to cluster external components.</p>
+<p><strong>DataRepository</strong></p>
+<p>In all likelihood, you won't need to implement this interface. Objects of this type help you manage multiple, pooled JDBC connections and their associated prepared statements. The factory method for objects of this type is RepositoryFactory.getDataRepository.</p>
+<p><strong>ShutdownHook</strong></p>
+<p>Implement this interface if you need to run some code when Tigase shuts down but that code can't take a long time to run. You have to add code to your project that registers your own shutdown hooks. Logging during shutdown time is already turned off so debugging this code will not be easy.</p>
+<p><strong>UserRepository</strong></p>
+<p>Implement this interface when you need to integrate Tigase user data (e.g. rosters, vcards) with your web site. If you still need to access a relational database, then consider extending JDBCRepository instead. If you are setting up a federated chat system, then you will also need to extend UserRepositoryMDImpl for multi-domain rosters, etc.</p>
+<p>Here are some additional tips and tricks to customizing Tigase.</p>
+<p>If you want to filter packets, then extend XMPPProcessor and return true from your override of the preProcess method. Returning true means to filter this packet out. Returning false means to permit this packet to continue.</p>
+<p>If you want to count packets, then implement the poorly named PacketFilterIfc which is more suitable for statistics generation than for filtering. Be sure to override the getStatistics method and add your counters (name and value) to the StatisticsList argument. Your statistics will be included in the results to any ad hoc stats command request.</p>
+<p>If your processor is more about extending existing functionality (such as integrating chat with your web site) than it is about providing completely new functionality, then consider extending one of the already written plugins from the tigase.xmpp.impl package. For example, extending tigase.xmpp.impl.Presence permits you to override the processInSubscribe, processOutSubscribe, and stopped methods for a more easier way to handle those complex changes in presence state.</p>
+<p>You can also customize Tigase by adding custom scripts to the scripts/admin folder. Usually written in the groovy programming language, these scripts get loaded at Tigase start up time and are available to be invoked as XMPP add hoc commands. You can also reload these types of scripts dynamically without having to restart Tigase. Groovy code runs much slower than Java so you should limit the frequency of your usage of these scripts. You load these scripts either by copying then in to the scripts/admin folder and restarting Tigase or by loading them dynamically via the add-script ad hoc command. When copied into the scripts/admin folder, each script must contain AS:Description, AS:CommandId, and AS:Component in a comment block near the top. The component must match one of the item names returned from a disco#items query.</p>
+<p>There you have it. Tigase is a highly customizable XMPP server that provides an excellent, scalable platform for real-time communications that is easy to extend to meet your specific needs.</p>

@@ -1,0 +1,45 @@
+---
+layout: post
+status: publish
+permalink: /analytics/graphing
+published: true
+title: Analytics Part 3 - Graphing
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+excerpt: Only through the process of constant and unrelenting improvement can you
+  hope to remain competitive. Analytics provides the reality check for that process.
+wordpress_id: 191
+wordpress_url: https://glennengstrand.info/blog/?p=191
+date: '2011-04-05 02:01:41 -0700'
+date_gmt: '2011-04-05 06:01:41 -0700'
+categories:
+- Technology
+- big data
+tags:
+- OLAP
+- Weka
+- R
+- Ubuntu
+- Essbase
+comments: []
+---
+<p>When you apply the rigour of numerical analysis to studying the complex behaviour of your app and how its users relate to it, you take out the guesswork in how to improve and fine-tune its effectiveness. Capturing the raw data through logging and massaging and selecting the right subset of that data are necessary prerequisite steps towards the final deliverable for analysis, the graph or table based report.</p>
+<p>In the past two blogs, we have surveyed some popular <a href="https://glennengstrand.info/analytics/logging">logging</a> and data <a href="https://glennengstrand.info/analytics/selection">selection</a> techniques. In this blog, I will introduce you to some tools to graph or report the data in ways that make it easy to draw action oriented conclusions.</p>
+<p>A picture is worth a thousand words as they say. Plotting a graph is a great way to spot trends or reveal new relationships in various aspects of your app. Graphing data entails inputing one or more CSV files and rendering an image based on the data from those files. I introduce four ways to do this; spreadsheets, OLAP, R, and Weka.</p>
+<p>Microsoft Office, Oracle <a href="http://www.openoffice.org/">Open Office</a>, IBM <a href="http://symphony.lotus.com/software/lotus/symphony/home.nsf/home">Lotus Symphony</a>, and <a href="http://docs.google.com">Google Docs</a> all offer a spreadsheet application capable of graphing the data from CSV files. Typically, this entails opening up the CSV file which displays its contents in rows and columns. Then selecting the right rows and columns (do include label data for the graph) and invoking a chart wizard to render the image. After that, you capture the image, usually through some kind of print screen capability.</p>
+<p>Sometimes your analytics is so complex that it is too cumbersome to use CSV files. Sometimes, the CSV files are just too big to import into the spreadsheet. Perhaps your analysts feel more comfortable slicing and dicing their data in real-time and pivoting with a drag-and-drop interface. For that reason, you may want to take a look at using an OLAP database as the back-end to your spreadsheets instead of opening up the CSV files directly in the spreadsheet app itself.</p>
+<p>When analysing logs files the normal way, you have multiple data sets and they are all two dimensional. With OLAP, you have only one data set but it is multi-dimensional. This multi-dimensional data set is usually referred to as the cube. Most OLAP cubes have about 20 or so dimensions to them. Each dimension is actually a hierarchy of values which is how you can roll-up or drill-down in an OLAP spreadsheet. You still use the CSV files only now you load the cube with the CSV files then access the cube with spreadsheets. Most OLAP technology these days use a relational database under the covers.</p>
+<p>Most of the relational database vendors also provide an OLAP offering. Microsoft and Oracle are the two most notable examples. Oracle's offering is most probably the most mature as they acquired Essbase from Hyperian who, in turn, purchased it from a company of the same name. For an open  source OLAP database, consider using Pentaho's <a href="http://mondrian.pentaho.com/">Mondrian</a> project. The GUI of choice for both the Microsoft and Oracle offerings is MS-Excel. Mondrian is intended to be embedded in your Java applications and has a web interface too but no first class plug-in for MS-Excel.</p>
+<p>Mondrian is open source and so lacks any licensing fee structure. Jaspersoft also releases a community edition of their <a title="Welcome to JasperForge" href="http://jasperforge.org/">OLAP server</a>. The others have somewhat high licensing costs. Be prepared to incur high operational and maintenance costs when using any OLAP solution.</p>
+<p>The down-side to using spreadsheets to render your graphs is that it is a manual operation. This can get to be a bit daunting when you have to generate these reports often. Another approach is to use the open source <a href="http://www.r-project.org/">R Programming Language</a> to generate the actual graphs.</p>
+<p>Perhaps the biggest advantage to R is that you can easily apply various transformations to the data set, or work with multiple data sets, as easy as writing a formula. R comes with lots of plotting and graphing options  such as dot charts, bar charts, pie charts, notched box plots, histograms, topographic maps, and heat maps.</p>
+<p>Just like with the spreadsheets, you read in a CSV file's contents to create a data set in R. Once loaded, there are various functions that you can apply to a data set in order to pivot, slice and dice, filter, normalize, etc. Vector and matrix math is available in R as are lists, data frames and just about any probability distribution function that you could imagine. The R programming language was originally designed for statistical analysis.</p>
+<p>If you are trying to find correlation between various dimensions in your data, then R has a special feature for you where it automatically plots a 2D graph of every column  vs every other column in your data set. This is called the scatter plot. You can quickly inspect each graph visually in order to discover hither to unknown relevance.</p>
+<p>Ubuntu users can easily install the R programming language environment via the Synaptic Package Manager by marking the r-recommended package for installation.</p>
+<p>Perhaps you see analysis in terms of data mining but don't feel comfortable with using a programming language such as R. In which case, take a look at <a href="http://www.cs.waikato.ac.nz/ml/weka/">Weka</a> which is a collection of machine learning algorithms for data mining tasks. Weka contains tools for data pre-processing, classification, regression, clustering, association rules, and visualization. There is a GUI tool that is easy to use. Although it prefers its own ARFF format, you can load Weka with CSV files. Like R, Weka can easily show you scatter plots to help you find correlation between various dimensions in your data. Unlike R, Weka provides advanced classification and clustering capability through the use of machine learning where you provide special training data that it uses to do a better job on the real data later on.</p>
+<p>There you have it. With these three blogs, you now have a survey level introduction to the various tools and techniques for <a href="https://glennengstrand.info/analytics/logging">logging</a>, <a href="https://glennengstrand.info/analytics/selection">selecting</a>, and graphing your app's activities for the purposes of analysing its performance and behavioural characteristics.</p>
+<p>Only through the process of constant and unrelenting improvement can you hope to remain competitive. Analytics provides the reality check for that process.</p>

@@ -1,0 +1,39 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/oss/scala
+published: true
+title: 'Micro-Services: Clojure vs Scala'
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 360
+wordpress_url: https://glennengstrand.info/blog/?p=360
+date: '2015-05-12 22:59:43 -0700'
+date_gmt: '2015-05-13 02:59:43 -0700'
+categories:
+- Technology
+- architecture
+tags:
+- scala
+- clojure
+- micro-services
+comments: []
+---
+<p>In a previous post, I <a href="https://glennengstrand.info/analytics/distributed/functional/programming">compared Scala and Clojure when it came to processing big data</a>. In this post, I am comparing Scala and Clojure in the world of micro-services. Earlier, I had written a rudimentary <a href="https://glennengstrand.info/software/architecture/oss/clojure">news feed service in Clojure</a>. Recently, I re-implemented the same <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed2" target="_blank">news feed service in Scala</a>. Given the same task, how did the two programming languages compared?</p>
+<p>In order to be able to make a valid comparison, I had to have feature parity between the two implementations. Both provide RESTful read and upsert access for participants, friends, inbound and outbound news. Both provide RESTful keyword based search of news feeds. Both use the following data sources;  SQL for participants and friends, Cassandra for Inbound and Outbound news, Redis for caching, Solr for search, and Kafka for logging performance data. Both used a configuration file with a run-time switch for using either MySql or PostGreSql. </p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2015/05/clojureNewsFeedClasses.png" alt="class diagram of the Clojure news feed micro-service" /></p>
+<p>So, how did Scala and Clojure compare? From my previous blog comparing these two technologies on big data, I found that the Scala program was 40% smaller than the Clojure equivalent. I expected something similar with micro-services. I was completely surprised to learn that the Scala news feed took more than 3 times as much code to implement as the Clojure version. What happened?</p>
+<p>Before we can answer that question, let's review some history of these two programming languages in order to get their underlying motivation. Both Scala and Clojure are Functional Programming languages written for the Java Virtual Machine. Java is statically typed which means that the compiler checks to make sure that the code doesn't attempt to do something obviously invalid to any object or variable. The compiler can do this because the developer identifies the type of everything all the time in the code. Java coders have pushed back from this because it makes the code bigger. In response to this, Clojure does not attempt any type checking at all. The Scala approach is to perform the static type checking but to have the compiler infer the type as much as it can rather than have the developer explicitly identify the type all the time.</p>
+<p>It turns out that static typing with implied types still takes more coding. You end up having to code a lot more classes and traits in order for the type checking to pass. See <a href="https://github.com/gengstrand/clojure-news-feed/commit/229c46a5af2f503ac7a157f8d3bedec2f90da438" target="_blank">commit 229c46a5af2f503ac7a157f8d3bedec2f90da438</a> for an example of this. </p>
+<p>Remember that run-time switch? What I did in Clojure was to hard code both sets of SQL commands and use the run-time switch to return the right command. I used a more ORM style approach in the Scala version where each entity class was responsible for publishing its own data bindings. There is both a MySql trait and a PostGreSql trait that knows how to generate the proper SQL statement based on those bindings. In the Scala community, they have what is called the <a href="https://coderwall.com/p/t_rapw/cake-pattern-in-scala-self-type-annotations-explicitly-typed-self-references-explained" target="_blank">cake pattern</a> where you use a combination of traits, self type annotations, and creating objects using the &ldquo;with&rdquo; keyword to implement dependency injection. I used the run-time switch to mix in the proper trait for the configured RDBMS. It turns out that approach takes a lot more code. Why not use Spring? At the time of this writing, the assembly plugin for the Scala Built Tool that creates uber jars doesn't work easily with Spring.</p>
+<p>The Clojure news feed is pretty close to being a true example of Functional Programming where you never mutate the state of existing objects. It does this by always creating the SQL statements dynamically. The Scala version caches prepared statements and just keeps executing those same statements with new parameters. This means mutating state which also means more code to manage that and make sure it works correctly in a multi-threaded environment under load. </p>
+<p>While coding the Scala version, I found myself refactoring the code a lot in order to eliminate repeated blocks of code. But the refactoring itself would actually net an increase in code. </p>
+<p><img src="https://glennengstrand.info/blog/wp-content/uploads/2015/05/scalaNewsFeedClasses.png" alt="Class Diagram for the Scala news feed micro-service" /></p>
+<p>What Scala lost to Clojure in brevity it made up for in safety. Static type checking does catch a lot of errors. I found that the Scala version had a more clear separation of concerns and lower coupling than the Clojure version. The extra layers of Scala code made it easier to write unit tests with more code coverage than the Clojure version.</p>
+<p>This blog is comparing Scala to Clojure when it comes to coding micro-services. I guess I should make some sort of statement as to which is better. I don't know. They are both pretty good. I guess the safety vs brevity question is most salient. If you have a multi-developer project with a significant code base and a busy release schedule, then Scala's compile time type checking is really nice. If you are writing lots of quick and small style programs (such as ETL or log parsing), then the brevity of Clojure sure comes in handy.</p>
+<p>When comparing two programming languages, there are three things to consider; syntactical differences, distinctive and innovative features, and the participating programming communities. Syntactical differences are obvious, LISP on steroids vs Java on steroids. Where the two languages innovate is a little bit harder to compare. Clojure has macros and multi-methods. Scala embeds XML in the language itself and supports the embedding of Domain Specific Languages. Perhaps the real differences are in the community. Clojure definitely emphasizes Functional Programming over Object Orientation and Scala is just the opposite. </p>
+<p>But the real basis for comparison should be in performance which is why you should check out my next blog where I put the two micro-services under load up on AWS and see who performs better.</p>

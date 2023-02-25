@@ -1,0 +1,116 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/microservice/graphql
+published: true
+title: GraphQL vs REST
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 496
+wordpress_url: https://glennengstrand.info/blog/?p=496
+date: '2019-11-27 15:19:08 -0800'
+date_gmt: '2019-11-27 19:19:08 -0800'
+categories:
+- Technology
+- architecture
+tags:
+- JavaScript
+- nodejs
+- GraphQL
+- REST
+- typescript
+- expressjs
+comments: []
+---
+<p>
+What technology stack should you use for developing high performance applications using server-side scripting in 2019? In this introductory blog and accompanying article, I compare and contrast two competing stacks, Express and JavaScript with Apollo and TypeScript. I also cover two competing API design styles, REST and GraphQL. If you are considering a change in writing your next Node microservice or if you are just curious about the relative merits of these architectures, then read on.</p>
+<p>
+According to the past three years of the Stack Overflow developer survey, Node.js is the most popular web server framework. Many high profile companies use it including Netflix, Uber, Paypal, and Linked In. It is the best choice for developing applications in server-side JavaScript. There is a wide variety of open source tooling and components designed to accelerate development of Node microservices. Larger companies have started to develop Node applications using Microsoft's TypeScript programming language. Express is a very popular framework for writing RESTful microservices in Node. Apollo is starting to pick up traction for writing microservices in Node using GraphQL.</p>
+<p>
+Here are the references for the article that you will see when you scroll down.</p>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th>reference</th>
+<th>link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>article below</td>
+<td><a href="https://glennengstrand.info/media/graphqlVsRest.pdf" alt="Apollo on TypeScript vs Express on JavaScript">GraphQL vs REST</a></td>
+</tr>
+<tr>
+<td>REST</td>
+<td>original <a href="https://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf" alt="original dissertation by Roy Fielding">dissertation</a> and blog on <a href="https://martinfowler.com/articles/richardsonMaturityModel.html" alt="steps toward the glory of REST">Richardson Maturity Model</a></td>
+</tr>
+<tr>
+<td>GraphQL</td>
+<td><a href="https://graphql.org/" alt="A query language for your API">home page</a></td>
+</tr>
+<tr>
+<td>GraphQL vs REST popularity</td>
+<td><a href="https://trends.google.com/trends/explore?geo=US&q=%2Fg%2F11cn3w0w9t,%2Fm%2F03nsxd" alt="google trends">google</a> and <a href="https://insights.stackoverflow.com/trends?tags=graphql%2Crest" alt="stack overflow trends">stack overflow</a> trends</td>
+</tr>
+<tr>
+<td>TypeScript vs Javascript popularity</td>
+<td><a href="https://trends.google.com/trends/explore?geo=US&q=%2Fm%2F0n50hxv,%2Fm%2F02p97" alt="google trends">google</a> and <a href="https://insights.stackoverflow.com/trends?tags=typescript%2Cjavascript" alt="stack overflow trends">stack overflow</a> trends</td>
+</tr>
+<tr>
+<td>InfoQ Trends Reports</td>
+<td><a href="https://www.infoq.com/articles/javascript-web-development-trends/" alt="JavaScript and Web Development">Web Development</a> and <a href="https://www.infoq.com/articles/programming-language-trends-2019/" alt="programming languages">Programming Languages</a> trends</td>
+</tr>
+<tr>
+<td>Express</td>
+<td><a href="https://expressjs.com/" alt="Fast, unopinionated, minimalist web framework for Node.js">home page</a></td>
+</tr>
+<tr>
+<td>graphql-yoga</td>
+<td><a href="https://github.com/prisma-labs/graphql-yoga/blob/master/README.md" alt="Fully-featured GraphQL Server with focus on easy setup, performance & great developer experience">README</a> for this open source project</td>
+</tr>
+<tr>
+<td>swagger-tools</td>
+<td><a href="https://github.com/apigee-127/swagger-tools/blob/master/docs/README.md" alt="Swagger middleware">README</a> for this open source project</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td><a href="https://www.typescriptlang.org/" alt="JavaScript that scales">home page</a></td>
+</tr>
+<tr>
+<td>TypeORM</td>
+<td><a href="https://typeorm.io/#/" alt="Amazing ORM for TypeScript and JavaScript (ES7, ES6, ES5). Supports MySQL, PostgreSQL, MariaDB, SQLite, MS SQL Server, Oracle, WebSQL databases. Works in NodeJS, Browser, Ionic, Cordova and Electron platforms.">home page</a></td>
+</tr>
+<tr>
+<td>Apollo server</td>
+<td><a href="https://www.apollographql.com/docs/apollo-server/" alt="What is Apollo Server and what does it do?">introduction</a></td>
+</tr>
+<tr>
+<td>feed 4</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed4" alt="news feed micro-service in javascript">source code</a> for Express on Javascript</td>
+</tr>
+<tr>
+<td>feed 10</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed10" alt="graphql version of news feed">source code</a> for Apollo on TypeScript</td>
+</tr>
+<tr>
+<td>load</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/load" alt="command line tool for testing the news feed service">source code</a> for the load test application</td>
+</tr>
+<tr>
+<td>proxy</td>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/proxy" alt="custom proxy">source code</a> for the API gateway</td>
+</tr>
+<tr>
+<td>BfF and GraphQL</td>
+<td><a href="https://medium.com/tech-tajawal/backend-for-frontend-using-graphql-under-microservices-5b63bbfcd7d9" alt="Backend-For-Frontend using GraphQL under Microservices">article</a> introducing this subject</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/graphqlVsRest.pdf" alt="Apollo vs Express">GraphQL vs REST</a><br/><br />
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/graphqlVsRest.pdf&embedded=true" style="width:630px; height:550px;" frameborder="0"></iframe></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/graphqlVsRest.pdf" alt="Apollo vs Express">PDF</a> for offline viewing.</p>
