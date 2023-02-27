@@ -25,6 +25,8 @@ tags:
 - AWStats
 comments: []
 ---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
 <p>Analytics has grown increasingly popular over the years and for good reason. There is currently no better way to arrive at a solid understanding of what your complex application is doing right and wrong than to numerically analyze its activity.</p>
 <p>This blog is a three parter. In today's blog, I will cover the basics of logging. How you can add code to your application that will log its activity for later analysis. In the next part, I will go into how to <a href="https://glennengstrand.info/analytics/selection">select the raw log data</a> in meaningful ways. In the final instalment, I shall elaborate on how to plot or graph relevant subsets of logging data for the purposes of insightful analysis.</p>
 <p>Logging is a necessary prerequisite to any kind of data analytics. If your application doesn't log its activity, then you cannot analyze it later. The simplest way to instrument your app for logging is to write out what it is currently doing to the console. Various tools are available to take the output to the console and to split it up into many files over time. Splitting up the output into multiple files will make it easier to copy to another server. It is not recommended that you manipulate and analyze the data on the same server as where your app is running. If your app can run as a service, then consider using <a href="http://smarden.org/runit/">runit</a> with its svlogd tool.</p>

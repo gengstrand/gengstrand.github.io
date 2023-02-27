@@ -23,6 +23,8 @@ tags:
 - micro-services
 comments: []
 ---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
 <p>In a previous post, I <a href="https://glennengstrand.info/analytics/distributed/functional/programming">compared Scala and Clojure when it came to processing big data</a>. In this post, I am comparing Scala and Clojure in the world of micro-services. Earlier, I had written a rudimentary <a href="https://glennengstrand.info/software/architecture/oss/clojure">news feed service in Clojure</a>. Recently, I re-implemented the same <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed2" target="_blank">news feed service in Scala</a>. Given the same task, how did the two programming languages compared?</p>
 <p>In order to be able to make a valid comparison, I had to have feature parity between the two implementations. Both provide RESTful read and upsert access for participants, friends, inbound and outbound news. Both provide RESTful keyword based search of news feeds. Both use the following data sources;  SQL for participants and friends, Cassandra for Inbound and Outbound news, Redis for caching, Solr for search, and Kafka for logging performance data. Both used a configuration file with a run-time switch for using either MySql or PostGreSql. </p>
 <p><img src="https://glennengstrand.info/blog/wp-content/uploads/2015/05/clojureNewsFeedClasses.png" alt="class diagram of the Clojure news feed micro-service" /></p>

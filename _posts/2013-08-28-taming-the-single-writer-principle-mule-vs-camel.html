@@ -19,6 +19,8 @@ categories:
 tags: []
 comments: []
 ---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
 <p>In the following article, you will find my write up of a weekend project exploring two implementations of a shard aware proxy that follows the content based router <a href="http://www.eaipatterns.com/" title="Patterns and Best Practices for Enterprise Integration" target="_blank">Enterprise Integration Pattern</a> in order to enforce the <a href="http://mechanical-sympathy.blogspot.com/2011/09/single-writer-principle.html" title="Single Writer Principle" target="_blank">single writer principle</a>. One implementation uses the open source project <a href="http://www.mulesoft.org/" title="Open Source Integration Platform | Mule ESB" target="_blank">Mule</a> and the other integrates with <a href="http://camel.apache.org/" title="Apache Camel" target="_blank">Apache Camel</a>. Here are some additional background and follow up information.</p>
 <p>In the Mule example, the custom filter dynamically sets an outbound property called host. The reason why this causes the request to get forwarded to that host lies in this part of the flow XML specification. Something similar happens with the path property too.</p>
 <pre>

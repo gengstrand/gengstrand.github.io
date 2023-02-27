@@ -23,6 +23,8 @@ tags:
 - Azure
 comments: []
 ---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
 <p>We all know that, in the world of cloud computing, Amazon Web Services is the leader by far. Network intelligence group, Synergy Research, recently released a <a href="https://www.srgresearch.com/articles/microsoft-google-and-ibm-charge-public-cloud-expense-smaller-providers">report</a> revealing that cloud vendors Microsoft, IBM, and Google had increased their market share by 5% (combined). I thought that perhaps it was time to see if there really are any viable alternatives to AWS in 2017.</p>
 <p>I decided to conduct an experiment. I ran my already developed <a href="https://github.com/gengstrand/clojure-news-feed">news feed micro-service</a> load test on the top three cloud platforms (AWS, GCP, and Azure) then compared them in terms of User eXperience, price, and performance.</p>
 <p>The news feed <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/load">load test</a> consists of running the <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed3">DropWizard</a> version of the micro-service and all of its dependent services (Cassandra, Redis, Kafka, Elastic Search) on 6 CentOS instances and a MySql instance. I run the load test application for at least a couple of hours and collect performance data in Elastic Search via my <a href="https://github.com/gengstrand/clojure-news-feed/tree/master/client/perf3">news-feed-performance</a> application.</p>

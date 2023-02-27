@@ -22,6 +22,8 @@ tags:
 - ANTLR
 comments: []
 ---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
 <p>ANTLR is ANother Tool for Language Recognition. I have used ANTLR many times before to embed the ability to parse a configuration or set of instructions written in a domain specific language into a command line tool. This past weekend, I coded up a <a href="http://code.google.com/p/blogwidget/">Java servlet that uses ANTLR technology</a> to parse web requests written in a specific query language conducive to web publishing.</p>
 <p>Compiler theory and language parsing is a pretty deep subject in computer science. You start with Chomsky's Theory of Formal Languages and end up with parsing strategies such as LALR(1) and LL(k). It's not for everyone. ANTLR makes it easy to develop and maintain your own parser for a language whose specification keeps changing but only if you have a solid grasp of the fundamental concepts. Otherwise, it is going to look a lot like voodoo.</p>
 <p>I have used ANTLR before but this is the first time that I have used version 3. There has been a lot of improvements since the last version. One of the biggest improvements has been the change of parsing strategy from LL(k) to LL(*). Perhaps a small digression to explain that is in order.</p>

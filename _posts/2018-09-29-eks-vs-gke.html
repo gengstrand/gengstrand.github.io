@@ -23,6 +23,8 @@ tags:
 - Kubernetes
 comments: []
 ---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
 <p>Here I compare and contrast Kubernetes as it runs on both Amazon&rsquo;s and Google&rsquo;s respective clouds in terms of ease of provisioning, cost, and performance under load of a nine component system for a simple news feed application. I also share with you a secret that I learned about AWS during the research that went into the writing of this blog.</p>
 <p><img src="/assets/media/sept2018/feed1.png" alt="Clojure throughput EKS vs GKE" /></p>
 <p>Those of you who are new to Kubernetes may not realize why it has become so important. Modern software development has advanced significantly in delivering value more quickly due mostly to the adoption of 12 factor compliant microservice architectures. Such architectures do a lot to ease the disruption inherent in the deployment of new releases of sophisticated software but at the cost of increased complexity in service interaction and governance. Docker does a great job in reducing some of that complexity by making it easy to repeatedly and consistently build and manage containers for these microservices to run in but that is solving only half the problem. How the services communicate with each other, known as service orchestration, is also complex and hard to manage. Kubernetes has risen in status as the most popular container orchestration platform. Kubernetes works with Docker in order to make it relatively easy to deploy and manage systems written in a microservice architecture.</p>
