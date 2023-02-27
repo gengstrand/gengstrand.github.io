@@ -1,6 +1,4 @@
 plugins:
 - jekyll-sitemap
 title: "Glenn Engstrand"
-description: "Exploring Cloud Native Open Source Tech Stacks for Microservice Architectures"
-google_analytics: "G-JMTSMFHZKD"
 url: "https://glennengstrand.info"
