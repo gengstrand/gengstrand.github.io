@@ -7,7 +7,7 @@ My focus is mentoring engineers in order to deliver scalable, 12 factor, cloud n
 
 ## Software Architecture Focused on Open Source Technology
 
-Here are some recent blogs.
+Here are some recent or popular blogs.
 
 - [Scala vs Java](/software/coding/scala/java)
 - [Ionic vs React vs Flutter](/software/architecture/ionic/react/flutter)
@@ -17,3 +17,6 @@ Here are some recent blogs.
 - [GraphQL vs REST](/software/architecture/microservice/graphql)
 - [Writing Microservices in Go](/software/architecture/microservice/golang)
 - [Spring Boot vs Dropwizard](/software/performance/springboot/dropwizard)
+- [Python Flask vs Node.js](/software/performance/nodejs/python)
+
+You can also learn more [about me](/about/).

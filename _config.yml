@@ -1,0 +1,8 @@
+remote_theme: pages-themes/modernist@v0.2.0
+plugins:
+- jekyll-remote-theme
+- jekyll-sitemap
+title: Glenn Engstrand
+description: Exploring Cloud Native Open Source Tech Stacks for Microservice Architectures
+google_analytics: G-JMTSMFHZKD
+url: "https://glennengstrand.info"
