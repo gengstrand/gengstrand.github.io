@@ -10,8 +10,8 @@ author:
   url: https://glennengstrand.info
 author_login: glenn
 author_url: https://glennengstrand.info
-date: '2023-06-20 17:13:38 -0700'
-date_gmt: '2023-06-20 21:13:38 -0700'
+date: '2023-06-20 09:01:38 -0700'
+date_gmt: '2023-06-20 13:01:38 -0700'
 categories:
 - Technology
 tags:
@@ -51,3 +51,4 @@ Which brings me to the next architecture trend which includes, but is not limite
 Cross platform or web SPA developers are most likely coding in either [javascript](https://www.javascript.com/) or [typescript](https://www.typescriptlang.org/). Typescript gets transpiled to javascript at build time. Javascript code that runs on user hardware runs either in a javascript engine called [Hermes](https://hermesengine.dev/) or whatever engine that the user's modern web browser has (V8, Chakra, JavaScriptCore, SpiderMonkey). Javascript code that runs on the backend most likely runs in [node.js](https://nodejs.org/en) which incorporates the headless chrome V8 engine. The Apollo server, nest, and server side next also run in node. For various logistical reasons, developers may need to build components based on different versions of node which means they need to have installed and be able to easily switch between different versions of node as they work on different software projects. The two most common tools for doing that easily are [nvm](https://github.com/nvm-sh/nvm) and [n](https://www.npmjs.com/package/n/v/5.0.1).
 
 From cross platform to GQL federation to micro frontends, these ten trends tell the story of what modern business focused frontend development is currently struggling with. There is a proliferation of everything and the logistics issues that come with this kind of abundance can be overwhelming. The role of the architect is to manage, or at least obscure, the unintended complexity that comes with the territory. These trends document popular attempts to mitigate these issues circa 2023.
+
