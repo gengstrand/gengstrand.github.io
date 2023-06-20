@@ -9,6 +9,7 @@ My focus is mentoring engineers in order to deliver scalable, 12 factor, cloud n
 
 Here are some recent or popular blogs.
 
+- [Top Ten Frontend Architecture Trends of 2023](/software/architecture/frontend)
 - [Scala vs Java](/software/coding/scala/java)
 - [Ionic vs React vs Flutter](/software/architecture/ionic/react/flutter)
 - [Devops Renaissance](/cloud/provisioning/devops)
