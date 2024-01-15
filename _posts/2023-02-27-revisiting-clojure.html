@@ -1,0 +1,158 @@
+---
+layout: post
+status: publish
+permalink: /software/architecture/microservice/clojure/vertx
+published: true
+title: Revisiting Clojure
+author:
+  display_name: glenn
+  login: glenn
+  url: https://glennengstrand.info
+author_login: glenn
+author_url: https://glennengstrand.info
+wordpress_id: 557
+wordpress_url: https://glennengstrand.info/blog/?p=588
+date: '2023-02-27 17:13:38 -0700'
+date_gmt: '2023-02-27 21:13:38 -0700'
+categories:
+- Technology
+tags:
+- Java
+- clojure
+comments: []
+---
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMTSMFHZKD"></script>
+<script src="/assets/ga.js"></script>
+<p>
+Clojure is a dynamic, general-purpose programming language, combining 
+the approachability and interactive development of a scripting language 
+with an efficient and robust infrastructure for multithreaded 
+programming. If you are considering microservice development in Clojure 
+or maybe you have heard of Clojure and are just curious about what it is
+ all about, then read on as this blog is for you.
+</p>
+<p>
+Clojure was first released in 2007 by the CTO of a small consulting 
+company that was recently acquired by a Brazilian digital bank. Its 
+creator, Rich Hickey, had this to say about why he invented Clojure. “I 
+wanted a language as acceptable as Java or C#, but supporting a much 
+simpler programming model, to use for the kinds of information system 
+development I had been doing professionally.” In terms of programming 
+language popularity, Clojure is pretty low on the list but still in the 
+top 100.
+</p>
+<p>
+I came to Clojure in 2014. It was a time when Java the programming 
+language was losing mindshare but Java the Virtual Machine was 
+experiencing a renaissance of interest. Other high profile languages 
+hosted in the JVM include Groovy, Scala, and Kotlin. There are over 60 
+niche languages hosted on the JVM. I picked Clojure as the first JVM 
+hosted language to learn because it was inspired by Lisp which I enjoyed
+ learning when I was much younger. I started this learning adventure by 
+implementing a rudimentary news feed microservice in Clojure.
+</p>
+<p>
+Fast forward to today which is 7 years after that. I decided to revisit 
+Clojure again to see what innovations and improvements to that community
+ and ecosystem have transpired since. I rewrote a similar microservice 
+in Clojure using more modern frameworks, techniques, etc. The article 
+below documents my findings in terms of architecture, design, coding, 
+and performance testing under load. Both implementations are open source
+ and freely available at my github repo.
+</p>
+<h2>References</h2>
+<table cellpadding="3" cellspacing="5" border="1">
+<thead>
+<tr>
+<th>link</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://glennengstrand.info/media/revisitingClojure.pdf" alt="Revisiting Clojure">Revisiting Clojure</a></td>
+<td>article below</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AppsFlyer/donkey" alt="Modern Clojure, Ring compliant, HTTP server and client, designed for ease of use and performance">Donkey</a></td>
+<td>Clojure framework covered here</td>
+</tr>
+<tr>
+<td><a href="https://www.infoq.com/articles/clojure-donkey-http-stack/" alt="Donkey: a Highly-Performant HTTP Stack for Clojure">Intro to Donkey</a></td>
+<td>Original InfoQ article</td>
+</tr>
+<tr>
+<td><a href="https://dl.acm.org/doi/10.1145/3386321" alt="A History of Clojure">A History of Clojure</a></td>
+<td>Origins of Clojure from its inventor</td>
+</tr>
+<tr>
+<td><a href="https://clojure.org/" alt="The Clojure Programming Language">Clojure</a></td>
+<td>home page for Clojure</td>
+</tr>
+<tr>
+<td><a href="https://clojure.org/reference/java_interop" alt="Clojure - Java Interop">Clojure – Java Interop</a></td>
+<td>Source for the quote about type hints</td>
+</tr>
+<tr>
+<td><a href="https://vertx.io/" alt="Eclipse Vert.x">Vert.x</a></td>
+<td>reactive web framework for Donkey</td>
+</tr>
+<tr>
+<td><a href="https://jdbi.org/" alt="Jdbi 3 Developer Guide">JDBI</a></td>
+<td>used to access relational database</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ring-clojure/ring" alt="Ring is a low-level interface and library for building web applications in the Clojure programming language">Clojure Ring</a></td>
+<td>Clojure framework used by feed 1</td>
+</tr>
+<tr>
+<td><a href="http://pedestal.io/" alt="Pedestal is a sturdy and reliable base for services and APIs">Pedestal</a></td>
+<td>another Clojure framework</td>
+</tr>
+<tr>
+<td><a href="https://leiningen.org/" alt="for automating Clojure projects without setting your hair on fire">Leiningen</a></td>
+<td>build tool for both feed 1 and 13</td>
+</tr>
+<tr>
+<td><a href="https://www.eclipse.org/jetty/" alt="The Eclipse Jetty Project">Jetty</a></td>
+<td>server backend used by feed 3, 6, and 8</td>
+</tr>
+<tr>
+<td><a href="https://netty.io/" alt="Netty is an asynchronous event-driven network application framework for rapid development of maintainable high performance protocol servers &amp; clients.">Netty</a></td>
+<td>server backend used by feed 11, 12, and 13</td>
+</tr>
+<tr>
+<td><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/package-summary.html" alt="Java Non-blocking Input Output">Java NIO</a></td>
+<td>Netty uses this part of the JRE for non-blocking IO</td>
+</tr>
+<tr>
+<td><a href="https://www.reactivemanifesto.org/" alt="The Reactive Manifesto">reactive programming</a></td>
+<td>concepts behind reactive programming</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed/doc/intro.md" alt="Introduction to feed">feed 1</a></td>
+<td>the original news feed implementation in Clojure</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gengstrand/clojure-news-feed/blob/master/server/feed13/README.md" alt="news feed server built with clojure on donkey">feed 13</a></td>
+<td>Clojure rewrite of news feed implementation</td>
+</tr>
+<tr>
+<td><a href="https://doc.ccw-ide.org/" alt="Counterclockwise Documentation Site">Counterclockwise</a></td>
+<td>IDE used for deving feed 1</td>
+</tr>
+<tr>
+<td><a href="https://gatling.io/" alt="The best developer tool to load test your
+web applications">Gatling</a></td>
+<td>use this to load feed 13 while profiling</td>
+</tr>
+<tr>
+<td><a href="https://visualvm.github.io/" alt="All-in-One Java Troubleshooting Tool">Visual VM</a></td>
+<td>used to profile feed 13</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a href="https://glennengstrand.info/media/revisitingClojure.pdf" alt="Revisiting Clojure">Revisiting Clojure</a><br>
+<iframe src="https://web.archive.org/web/20210329155201if_/https://docs.google.com/gview?url=https://glennengstrand.info/media/revisitingClojure.pdf&amp;embedded=true" style="width:800px; height:1000px;" frameborder="0" data-ruffle-polyfilled=""></iframe></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/revisitingClojure.pdf" alt="Revisiting Clojure">PDF</a> for offline viewing.</p>
