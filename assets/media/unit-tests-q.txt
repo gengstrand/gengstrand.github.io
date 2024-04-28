@@ -1,0 +1,250 @@
+Here is the source code for a service written in Java for Spring Boot. It has three public methods; getParticipant, addParticipant, and addOutbound.
+
+package info.glennengstrand.services;
+
+import java.util.Optional;
+import java.util.UUID;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.datastax.driver.core.utils.UUIDs;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+
+import info.glennengstrand.api.Participant;
+import info.glennengstrand.resources.NotFoundException;
+import info.glennengstrand.resources.ParticipantApi;
+import io.swagger.configuration.RedisConfiguration.ParticipantRedisTemplate;
+import info.glennengstrand.dao.mysql.ParticipantRepository;
+
+import info.glennengstrand.api.Outbound;
+import info.glennengstrand.dao.cassandra.OutboundRepository;
+import info.glennengstrand.dao.cassandra.InboundRepository;
+import info.glennengstrand.util.Link;
+import info.glennengstrand.api.Friend;
+import info.glennengstrand.api.Inbound;
+import io.swagger.configuration.RedisConfiguration.FriendRedisTemplate;
+import io.swagger.configuration.RedisConfiguration.Friends;
+import info.glennengstrand.dao.mysql.FriendRepository;
+
+@Service
+public class ParticipantService implements ParticipantApi {
+
+	@Autowired
+	private ParticipantRepository participantRepository;
+	
+	@Autowired
+	private ParticipantRedisTemplate participantTemplate;
+    
+	@Autowired
+	private FriendRepository friendRepository;
+	
+	@Autowired
+	private FriendRedisTemplate friendTemplate;
+	
+    	@Autowired
+	private OutboundRepository outboundRepository;
+
+	@Autowired
+	private InboundRepository inboundRepository;
+
+    @Autowired
+    private RestHighLevelClient esClient;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(ParticipantService.class.getCanonicalName());
+
+    private void indexStory(Long sender, String story) {
+	    Map<String, Object> doc = new HashMap<>();
+	    doc.put(OutboundService.DOCUMENT_RESULT_FIELD, sender);
+	    doc.put(OutboundService.DOCUMENT_SEARCH_FIELD, story);
+	    IndexRequest req = new IndexRequest(OutboundService.DOCUMENT_INDEX, OutboundService.DOCUMENT_TYPE, UUID.randomUUID().toString()).source(doc);
+	    try {
+    		esClient.indexAsync(req, RequestOptions.DEFAULT, new ActionListener<IndexResponse>() {
+
+    			@Override
+    			public void onResponse(IndexResponse response) {
+    				LOGGER.debug(response == null ? "no response" : response.toString());
+    			}
+
+    			@Override
+    			public void onFailure(Exception e) {
+    				LOGGER.warn("cannot index elasticsearch document: ", e);
+    			}
+    			
+    		});
+	    } catch (Exception e) {
+    		LOGGER.warn("Cannot call elasticsearch: ", e);
+	    }
+	}
+    
+	@Override
+	public Participant addParticipant(Participant body) {
+		info.glennengstrand.dao.mysql.Participant p = new info.glennengstrand.dao.mysql.Participant();
+		p.setMoniker(body.getName());
+		info.glennengstrand.dao.mysql.Participant retVal = participantRepository.save(p);
+		return body.link(Link.toLink(retVal.getId())).id(retVal.getId());
+	}
+
+    
+	@Override
+	public Participant getParticipant(Long id) {
+		String key = "Participant::".concat(id.toString());
+		if (participantTemplate.hasKey(key)) {
+			return participantTemplate.boundValueOps(key).get();
+		} else {
+			Optional<info.glennengstrand.dao.mysql.Participant> r = participantRepository.findById(id);
+			if (r.isPresent()) {
+				info.glennengstrand.dao.mysql.Participant p = r.get();
+				Participant retVal = new Participant().id(p.getId()).name(p.getMoniker()).link(Link.toLink(p.getId()));
+				participantTemplate.boundValueOps(key).set(retVal);
+				return retVal;
+			} else {
+				throw new NotFoundException(404, String.format("participant {} not found", id));
+			}
+		}
+	}
+    
+    
+	@Override
+	public Outbound addOutbound(Long id, Outbound body) {
+		info.glennengstrand.dao.cassandra.Outbound o = new info.glennengstrand.dao.cassandra.Outbound();
+		o.setParticipantId(id);
+		o.setSubject(body.getSubject());
+		o.setStory(body.getStory());
+		o = outboundRepository.save(o);
+		getFriend(id).stream().forEach(f -> {
+			info.glennengstrand.api.Inbound i = new info.glennengstrand.api.Inbound()
+					.from(body.getFrom())
+					.to(f.getTo())
+					.subject(body.getSubject())
+					.story(body.getStory());
+			addInbound(Link.extractId(f.getTo()), i);
+		});
+		indexStory(id, body.getStory());
+		return body.occurred(convert(UUIDs.unixTimestamp(o.getOccured())));
+	}
+
+}
+
+
+Here is the unit test code for that addOutbound method written in Java on Spring test.
+
+package info.glennengstrand.services;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.elasticsearch.client.RestHighLevelClient;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+
+import org.springframework.test.context.junit4.SpringRunner;
+
+import info.glennengstrand.api.Outbound;
+import info.glennengstrand.api.Participant;
+import info.glennengstrand.util.Link;
+import info.glennengstrand.dao.cassandra.InboundRepository;
+import info.glennengstrand.dao.cassandra.NewsFeedItemKey;
+import info.glennengstrand.dao.cassandra.OutboundRepository;
+import info.glennengstrand.dao.mysql.Friend;
+import info.glennengstrand.dao.mysql.FriendRepository;
+import info.glennengstrand.dao.mysql.ParticipantRepository;
+import info.glennengstrand.resources.ParticipantApi;
+import io.swagger.configuration.RedisConfiguration.FriendRedisTemplate;
+import io.swagger.configuration.RedisConfiguration.ParticipantRedisTemplate;
+
+@RunWith(SpringRunner.class)
+public class ParticipantServiceTest {
+
+	@TestConfiguration
+	static class ParticipantServiceImplTestContextConfiguration {
+		@Bean
+		public ParticipantApi participantService() {
+			return new ParticipantService();
+		}
+
+	}
+		
+	@Autowired
+	private ParticipantApi participantService;
+	
+	@MockBean
+	private OutboundRepository outboundRepository;
+
+	@MockBean
+	private FriendRepository friendRepository;
+	
+	@MockBean
+	private InboundRepository inboundRepository;
+
+	@MockBean
+	private FriendRedisTemplate friendRedisTemplate;
+	
+	@MockBean
+	private ParticipantRepository participantRepository;
+	
+	@MockBean
+	private ParticipantRedisTemplate participantRedisTemplate;
+	
+	@MockBean
+	private RestHighLevelClient esClient;
+	
+	private static final Long fromParticipantId = 1L;
+	private static final Long toParticipantId = 2L;
+	private static final String TEST_NAME = "test participant";
+	private static final String TEST_STORY = "test story";
+	private static final String TEST_SUBJECT = "test subject";
+	
+	@Before
+	public void setUp() throws Exception {
+		List<Friend> friends = new ArrayList<>();
+		Friend f = new Friend();
+		f.setId(1l);
+		f.setFromParticipantId(fromParticipantId);
+		f.setToParticipantId(toParticipantId);
+		friends.add(f);
+		info.glennengstrand.dao.cassandra.Outbound o = new info.glennengstrand.dao.cassandra.Outbound();
+		NewsFeedItemKey k = new NewsFeedItemKey();
+		o.setOccured(k.getOccurred());
+		Mockito.when(friendRepository.findByFromParticipantId(fromParticipantId)).thenReturn(friends);
+		Mockito.when(friendRepository.findByToParticipantId(fromParticipantId)).thenReturn(Collections.emptyList());
+		Mockito.when(friendRedisTemplate.hasKey(Mockito.anyString())).thenReturn(false);
+		Mockito.when(friendRedisTemplate.boundValueOps(Mockito.anyString())).thenReturn(new FriendRedisOperation());
+		Mockito.when(outboundRepository.save(Mockito.any())).thenReturn(o);
+	}
+
+	@Test
+	public void testAddOutbound() throws IOException {
+		Outbound t = new Outbound().from(Link.toLink(fromParticipantId)).story("test story").subject("test subject");
+		participantService.addOutbound(fromParticipantId, t);
+		Mockito.verify(inboundRepository).save(Mockito.any());
+	}
+
+}
+
+Write unit tests for the getParticipant and addParticipant methods.
