@@ -33,7 +33,7 @@ In this blog, I explore what it is like to develop a feature identical microserv
 
 | type of source | reference link |
 |----------------|----------------|
-| download | [published PDF of the article below](https://glennengstrand.info/media/csharp-vs-kotlin.pdf) |
+| download | [published PDF of the article below](https://glennengstrand.info/assets/media/csharp-vs-kotlin.pdf) |
 | source code | [news feed in C# on ASP.NET](https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed14) |
 | source code | [news feed written in Kotlin on Spring Web-Flux](https://github.com/gengstrand/clojure-news-feed/tree/master/server/feed15) |
 | intro | [C#](https://dotnet.microsoft.com/en-us/languages/csharp) |
@@ -58,7 +58,7 @@ In this blog, I explore what it is like to develop a feature identical microserv
 | book | [The Cathedral and the Bazaar](http://pld.cs.luc.edu/courses/412/spr23/mnotes/cathedral-bazaar.pdf) |
 
 <p>
-<a href="https://glennengstrand.info/media/csharp-vs-kotlin.pdf" alt="C# vs Kotlin">C# vs Kotlin</a><br>
-<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/media/csharp-vs-kotlin.pdf&amp;embedded=true" style="width:800px; height:1000px;" frameborder="0" data-ruffle-polyfilled=""></iframe></p>
-<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/media/csharp-vs-kotlin.pdf" alt="C# vs Kotlin">PDF</a> for offline viewing.
+<a href="https://glennengstrand.info/assets/media/csharp-vs-kotlin.pdf" alt="C# vs Kotlin">C# vs Kotlin</a><br>
+<iframe src="https://docs.google.com/gview?url=https://glennengstrand.info/assets/media/csharp-vs-kotlin.pdf&amp;embedded=true" style="width:800px; height:1000px;" frameborder="0" data-ruffle-polyfilled=""></iframe></p>
+<p>Having trouble viewing the embedded document? Feel free to download the <a href="https://glennengstrand.info/assets/media/csharp-vs-kotlin.pdf" alt="C# vs Kotlin">PDF</a> for offline viewing.
 </p>
