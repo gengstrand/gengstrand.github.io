@@ -10,8 +10,8 @@ author:
   url: https://glennengstrand.info
 author_login: glenn
 author_url: https://glennengstrand.info
-date: '2024-07-20 09:01:38 -0700'
-date_gmt: '2024-07-20 13:01:38 -0700'
+date: '2024-07-08 21:01:38 -0700'
+date_gmt: '2024-07-09 06:01:38 -0700'
 categories:
 - Technology
 tags:
