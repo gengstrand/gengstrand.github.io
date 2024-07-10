@@ -23,7 +23,10 @@ comments: []
 <script src="/assets/ga.js"></script>
 
 <p>
-I was first exposed to .NET in the early aughts in a startup that was a precursor to programmatic AdTech. Twenty years later, I find myself in a fintech startup with a mixture of modern C# and Kotlin. Many engineering organizations that I have participated in standardized on Java and the last shop chose Scala so Kotlin seemed like a natural transition for me while C# felt more like a homecoming only all grown up.
+Back to a time when Microsoft was more known for their programming language compilers than video games or cloud computing, it was .NET that unseated COM when it came to building business focused desktop software or web applications. Since then, Microsoft has done a great job at keeping C# up-to-date with modern, emerging trends in computer science.
+</p>
+<p>
+In more-or-less the same timeframe, Java the programming language was starting to be considered as somewhat legacy but Java the Virtual Machine was experiencing a renaissance with a proliferation of new and innovative programming languages that targeted the JVM. Kotlin quickly rose to the top of the list of Java alternatives.
 </p>
 <p>
 In this blog, I explore what it is like to develop a feature identical microservice in those two programming languages with their accompanying tech stacks and developer ecosystems. I cover both the developer experience and the performance under load.
