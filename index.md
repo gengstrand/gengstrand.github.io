@@ -9,6 +9,7 @@ My focus is mentoring engineers in order to deliver scalable, 12 factor, cloud n
 
 Here are some recent or popular blogs.
 
+- [A Static Code Analysis of 8 Open Source Giants](/software/opensource/analysis)
 - [Using Large Language Models to Migrate a News Feed Microservice](/software/llm/migration/java/typescript)
 - [C# vs Kotlin](/software/coding/csharp/kotlin)
 - [Top Ten Frontend Architecture Trends of 2023](/software/architecture/frontend)

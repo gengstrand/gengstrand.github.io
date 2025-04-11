@@ -104,22 +104,22 @@ This chart highlights specific packages with a large number of files. The *org.a
 
 ![stdev_cyc_comp vs package](/assets/media/apr2025/package_stdev_cyc_comp.png "Figure 5: Standard Deviation of Cyclomatic Complexity for Selected Complex Packages")
 
-Standard deviation tells us about the spread of complexity within a package. A high value means a package contains a mix of simple and very complex files. Elasticsearch's xpack.sql.parser and xpack.esql.parser shows extremely high standard deviations. This deviation suggests that while the package handles SQL parsing, its complexity varies dramatically between its components. Neo4j's cypher.internal.planning also shows significant variation.
+Standard deviation tells us about the spread of complexity within a package. A high value means a package contains a mix of simple and very complex files. Elasticsearch's *xpack.sql.parser* and *xpack.esql.parser* shows extremely high standard deviations. This deviation suggests that while the package handles SQL parsing, its complexity varies dramatically between its components. Neo4j's cypher.internal.planning also shows significant variation.
 
-In contrast, packages like org.elasticsearch.index.mapper have lower variation despite potentially high average complexity (not shown here), suggesting more uniform complexity across its files. Why not show average cyclomatic complexity? I could have done that instead. That graph looks very similar and identifies the same packages.
+In contrast, packages like *org.elasticsearch.index.mapper* have lower variation despite potentially high average complexity (not shown here), suggesting more uniform complexity across its files. Why not show average cyclomatic complexity? I could have done that instead. That graph looks very similar and identifies the same packages.
 
 3. Inter-Package Dependencies (Fan-In)
 
 ![fan_in vs package](/assets/media/apr2025/package_fan_in.png "Figure 6: Fan-In for Selected Complex Packages")
 
-Fan-in highlights how central a package is. Elasticsearch's index.mapper package has the highest fan-in among this selection, with nearly 200 other packages depending on it. This high fan-in makes sense – mapping is core to a search engine. Similarly, Spark's internal and Lucene's index packages show high fan-in, indicating their centrality within their respective systems. Changes in these high fan-in packages require careful consideration due to their potential impact.
+Fan-in highlights how central a package is. Elasticsearch's *index.mapper* package has the highest fan-in among this selection, with nearly 200 other packages depending on it. This high fan-in makes sense – mapping is core to a search engine. Similarly, Spark's internal and Lucene's index packages show high fan-in, indicating their centrality within their respective systems. Changes in these high fan-in packages require careful consideration due to their potential impact.
 
 ### Cassandra LoC Revisited
 
-Earlier in this blog, we covered that Cassandra had, by far, the largest median LoC. Why would Cassandra have such large code files? That is hard to say. Here is a short list of some of the most oversized packages.
+Earlier in this blog, we covered that Cassandra had the largest median LoC. Why would Cassandra have such large code files? That is hard to say. Here is a short list of some of the most oversized packages.
 
 | package | median_loc | mean_loc |
-| ------- | ---------- | -------- |
+| ------- | ---------: | -------: |
 | org.apache.cassandra.cql3.functions.types | 3173 | 1886 |
 | org.apache.cassandra.index.sasi.utils.trie | 1152 | 936 |
 | org.apache.cassandra.index | 1066 | 897 |
@@ -147,7 +147,7 @@ These are all "Healthy" open-source projects, meaning they are all successful, w
 
 ### Conclusion: Diverse Landscapes
 
-Our static analysis journey across these eight open-source projects reveals a diverse landscape:
+Our static analysis journey across these eight open-source projects reveals a diverse landscape.
 
 **Scale & Scope:** Projects like Elasticsearch, Spark, and Lucene demonstrate massive scale, potentially acting as "kitchen sinks" covering broad functionality within their domains. Elasticsearch stands out for both its size and average per-file complexity.
 
@@ -155,6 +155,6 @@ Our static analysis journey across these eight open-source projects reveals a di
 
 **Varied Structures:** Cassandra tends towards longer files (high median LoC), while Neo4j leans towards shorter ones.
 
-**Identified Hotspots:** Specific packages within Spark (internal), Elasticsearch (index.mapper, xpack.sql.parser), and Lucene (index, search) emerged as significant hubs of size, complexity variation, or high inter-dependency (fan-in).
+**Identified Hotspots:** Specific packages within Spark (*internal*), Elasticsearch (*index.mapper, xpack.sql.parser*), and Lucene (*index, search*) emerged as significant hubs of size, complexity variation, or high inter-dependency (fan-in).
 
 Static code analysis doesn't provide all the answers, but it offers invaluable quantitative insights into the structure and characteristics of software systems. We can better understand, navigate, and make informed decisions about even the largest and most complex codebases by looking at metrics like file count, complexity, LoC, and fan-in at different granularities.
