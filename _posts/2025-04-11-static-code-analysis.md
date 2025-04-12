@@ -32,7 +32,7 @@ comments: []
 
 Software architects and developers often need to understand the structure and complexity of codebases, whether it's for onboarding, planning refactoring, or simply assessing maintainability. Static code analysis provides a powerful lens, offering quantitative insights without running the code.
 
-I recently released a free-to-use web app where you can [ask software architecture questions](https://www.exploravention.com/AskArchitect/) about eight popular open-source services. The answers come from an artificially intelligent large language model using a prompting technique called retrieval augmented generation. I performed static code analysis on the underlying source code repositories to accomplish this. The data informing this blog comes from that analysis.
+I recently released a free-to-use web app where you can [ask software architecture questions](https://www.exploravention.com/products/askarch/) about eight popular open-source services. The answers come from an artificially intelligent large language model using a prompting technique called retrieval augmented generation. I performed static code analysis on the underlying source code repositories to accomplish this. The data informing this blog comes from that analysis.
 
 In this post, we'll explore static code analysis metrics for the following eight prominent open-source projects:
 
